@@ -36,7 +36,9 @@ const RequestRecovery: React.FC = () => {
         try {
             await requestPasswordRecovery(data).unwrap();
             toast.success('Recovery email sent. Please check your inbox.');
-            router.push('/auth/verify-recovery');
+            // Encode the email and add it to the URL
+            const encodedEmail = encodeURIComponent(data.email);
+            router.push(`/auth/verify-recovery?email=${encodedEmail}`);
         } catch (error) {
             console.error(error);
             toast.error('Failed to send recovery email. Please try again.');
@@ -98,7 +100,7 @@ const RequestRecovery: React.FC = () => {
                         </motion.div>
                         <motion.div variants={itemVariants}>
                             <CardDescription>
-                                Enter your email address and we`&apos;`ll send you a recovery link
+                                Enter your email address and we&apos;ll send you a recovery link
                             </CardDescription>
                         </motion.div>
                     </CardHeader>

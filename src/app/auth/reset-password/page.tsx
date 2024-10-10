@@ -1,62 +1,63 @@
 'use client';
 
-import React,{ useEffect,useState } from 'react';
-import Link from 'next/link';
+import React,{ useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter,useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useVerifyRecoveryCodeMutation } from '@/redux/features/auth/authApi';
+import { useResetPasswordMutation } from '@/redux/features/auth/authApi';
 import { toast } from 'sonner';
-import { Loader2,Key } from 'lucide-react';
+import { Loader2,Lock } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card,CardContent,CardHeader,CardTitle,CardDescription } from "@/components/ui/card";
-import verifyImage from '@/assets/images/signup3.avif';
+import resetPasswordImage from '@/assets/images/signup3.avif'; // Make sure to have this image
 import { motion } from 'framer-motion';
 
-const verifyRecoverySchema = z.object({
+const resetPasswordSchema = z.object({
     email: z.string().email('Invalid email address'),
-    code: z.string().min(6,'Recovery code must be at least 6 characters'),
+    code: z.string().min(6,'Verification code must be at least 6 characters'),
+    newPassword: z.string().min(6,'Password must be at least 6 characters'),
+    confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword,{
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
 });
 
-type VerifyRecoveryFormValues = z.infer<typeof verifyRecoverySchema>;
+type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
-const VerifyRecovery: React.FC = () => {
-    const searchParams = useSearchParams();
-    const [verifyRecoveryCode,{ isLoading }] = useVerifyRecoveryCodeMutation();
+const ResetPassword: React.FC = () => {
+    const [resetPassword,{ isLoading }] = useResetPasswordMutation();
     const router = useRouter();
-    const [emailChecked,setEmailChecked] = useState(false);
-
-    const { register,handleSubmit,formState: { errors },setValue } = useForm<VerifyRecoveryFormValues>({
-        resolver: zodResolver(verifyRecoverySchema),
+    const searchParams = useSearchParams();
+    const { register,handleSubmit,formState: { errors },setValue } = useForm<ResetPasswordFormValues>({
+        resolver: zodResolver(resetPasswordSchema),
     });
 
     useEffect(() => {
         const emailParam = searchParams.get('email');
-        if (emailParam) {
+        const codeParam = searchParams.get('code');
+        if (emailParam && codeParam) {
             const decodedEmail = decodeURIComponent(emailParam);
-
             setValue('email',decodedEmail);
-            setEmailChecked(true);
+            setValue('code',codeParam);
         } else {
-            console.log('No email found in URL, redirecting...');
+            console.log('Missing email or code, redirecting...');
             router.push('/auth/request-recovery');
         }
-    },[searchParams,router,setValue,emailChecked]);
+    },[searchParams,router,setValue]);
 
-    const onSubmit = async (data: VerifyRecoveryFormValues) => {
+    const onSubmit = async (data: ResetPasswordFormValues) => {
         try {
-            await verifyRecoveryCode(data).unwrap();
-            toast.success('Recovery code verified successfully.');
-            // Encode both email and code and add them to the URL
-            const encodedEmail = encodeURIComponent(data.email);
-            const encodedCode = encodeURIComponent(data.code);
-            router.push(`/auth/reset-password?email=${encodedEmail}&code=${encodedCode}`);
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { confirmPassword,...resetData } = data;
+            await resetPassword(resetData).unwrap();
+            toast.success('Password reset successful!');
+            router.push('/auth/signin');
         } catch (error) {
-            console.error('Verification error:',error);
-            toast.error('Failed to verify recovery code. Please try again.');
+            console.error(error);
+            toast.error('Password reset failed. Please try again.');
         }
     };
 
@@ -96,8 +97,8 @@ const VerifyRecovery: React.FC = () => {
             <Card className="w-full max-w-screen-xl flex flex-col sm:flex-row overflow-hidden">
                 <div className="flex-1 hidden sm:block relative h-64 sm:h-auto">
                     <Image
-                        src={verifyImage}
-                        alt="Verify recovery code background"
+                        src={resetPasswordImage}
+                        alt="Reset password background"
                         layout="fill"
                         objectFit="cover"
                     />
@@ -111,11 +112,11 @@ const VerifyRecovery: React.FC = () => {
                             <h1 className="text-3xl sm:text-4xl font-extrabold">JourneyMate</h1>
                         </motion.div>
                         <motion.div variants={itemVariants}>
-                            <CardTitle className="text-xl sm:text-2xl font-semibold">Verify Recovery Code</CardTitle>
+                            <CardTitle className="text-xl sm:text-2xl font-semibold">Reset your password</CardTitle>
                         </motion.div>
                         <motion.div variants={itemVariants}>
                             <CardDescription>
-                                Enter the recovery code sent to your email
+                                Enter your new password
                             </CardDescription>
                         </motion.div>
                     </CardHeader>
@@ -126,23 +127,43 @@ const VerifyRecovery: React.FC = () => {
                         >
                             <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
                                 <input type="hidden" {...register("email")} />
+                                <input type="hidden" {...register("code")} />
                                 <div>
-                                    <label htmlFor="code" className="block text-sm font-medium text-gray-700">
-                                        Recovery Code
+                                    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
+                                        New Password
                                     </label>
                                     <div className="mt-1 relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Key className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </div>
                                         <Input
-                                            {...register("code")}
-                                            id="code"
-                                            type="text"
+                                            {...register("newPassword")}
+                                            id="newPassword"
+                                            type="password"
                                             className="pl-10"
-                                            placeholder="Enter recovery code"
+                                            placeholder="••••••••"
                                         />
                                     </div>
-                                    {errors.code && <p className="mt-1 text-sm text-red-600">{errors.code.message}</p>}
+                                    {errors.newPassword && <p className="mt-1 text-sm text-red-600">{errors.newPassword.message}</p>}
+                                </div>
+
+                                <div>
+                                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                                        Confirm New Password
+                                    </label>
+                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        </div>
+                                        <Input
+                                            {...register("confirmPassword")}
+                                            id="confirmPassword"
+                                            type="password"
+                                            className="pl-10"
+                                            placeholder="••••••••"
+                                        />
+                                    </div>
+                                    {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>}
                                 </div>
 
                                 <div>
@@ -151,17 +172,11 @@ const VerifyRecovery: React.FC = () => {
                                         disabled={isLoading}
                                         className="w-full"
                                     >
-                                        {isLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <Key className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />}
-                                        Verify Code
+                                        {isLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <Lock className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />}
+                                        Reset Password
                                     </Button>
                                 </div>
                             </form>
-
-                            <div className="text-center">
-                                <Link href="/auth/request-recovery" className="font-medium text-primary hover:underline">
-                                    Didn&apos;t receive a code? Request again
-                                </Link>
-                            </div>
                         </motion.div>
                     </CardContent>
                 </motion.div>
@@ -170,4 +185,4 @@ const VerifyRecovery: React.FC = () => {
     );
 };
 
-export default VerifyRecovery;
+export default ResetPassword;
