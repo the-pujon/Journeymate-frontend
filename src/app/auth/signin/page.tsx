@@ -17,6 +17,7 @@ import Google from '@/assets/icons/Google';
 import signinImage from '@/assets/images/signup3.avif';
 import { useAppDispatch } from '@/redux/hook';
 import { setUser } from '@/redux/features/auth/authSlice';
+import { motion } from 'framer-motion';
 
 const signInSchema = z.object({
     email: z.string().email('Invalid email address'),
@@ -49,8 +50,39 @@ const SignIn: React.FC = () => {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0,y: 50 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                damping: 20,
+                stiffness: 100
+            }
+        },
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0,y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                damping: 20,
+                stiffness: 100
+            }
+        },
+    };
+
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
+        <motion.div
+            className="min-h-screen flex items-center justify-center p-4"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
             <Card className="w-full max-w-screen-xl flex flex-col sm:flex-row overflow-hidden">
                 <div className="flex-1 hidden sm:block relative h-64 sm:h-auto">
                     <Image
@@ -60,21 +92,31 @@ const SignIn: React.FC = () => {
                         objectFit="cover"
                     />
                 </div>
-                <div className="w-full sm:w-1/2 lg:w-2/5 p-0 sm:p-8">
+                <motion.div
+                    className="w-full sm:w-1/2 lg:w-2/5 p-0 sm:p-8"
+                    variants={itemVariants}
+                >
                     <CardHeader className="text-center">
-                        <div className="mb-4">
+                        <motion.div className="mb-4" variants={itemVariants}>
                             <h1 className="text-3xl sm:text-4xl font-extrabold">JourneyMate</h1>
-                        </div>
-                        <CardTitle className="text-xl sm:text-2xl font-semibold">Sign in to your account</CardTitle>
-                        <CardDescription>
-                            Or{' '}
-                            <Link href="/auth/signup" className="font-medium text-primary hover:underline">
-                                create a new account
-                            </Link>
-                        </CardDescription>
+                        </motion.div>
+                        <motion.div variants={itemVariants}>
+                            <CardTitle className="text-xl sm:text-2xl font-semibold">Sign in to your account</CardTitle>
+                        </motion.div>
+                        <motion.div variants={itemVariants}>
+                            <CardDescription>
+                                Or{' '}
+                                <Link href="/auth/signup" className="font-medium text-primary hover:underline">
+                                    create a new account
+                                </Link>
+                            </CardDescription>
+                        </motion.div>
                     </CardHeader>
                     <CardContent>
-                        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
+                        <motion.div
+                            className="mt-6 sm:mt-8 space-y-4 sm:space-y-6"
+                            variants={itemVariants}
+                        >
                             <Button
                                 variant="outline"
                                 className="w-full"
@@ -171,11 +213,11 @@ const SignIn: React.FC = () => {
                                     </Button>
                                 </div>
                             </form>
-                        </div>
+                        </motion.div>
                     </CardContent>
-                </div>
+                </motion.div>
             </Card>
-        </div>
+        </motion.div>
     );
 };
 

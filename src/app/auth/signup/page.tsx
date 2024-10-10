@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card,CardContent,CardHeader,CardTitle,CardDescription } from "@/components/ui/card";
 import Google from '@/assets/icons/Google';
 import signupImage from '@/assets/images/signup3.avif';
+import { motion } from 'framer-motion';
 
 const signUpSchema = z.object({
     name: z.string().min(2,'Name must be at least 2 characters'),
@@ -47,40 +48,80 @@ const SignUp: React.FC = () => {
             await signup(signupData).unwrap();
 
             toast.success('Sign up successful!');
-            router.push('/auth/login');
+            router.push('/auth/signin');
         } catch (error) {
             console.error(error)
             toast.error('Sign up failed. Please try again.');
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0,y: 50 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                damping: 20,
+                stiffness: 100
+            }
+        },
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0,y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                damping: 20,
+                stiffness: 100
+            }
+        },
+    };
+
     return (
-        <div className="min-h-screen flex items-center justify-center p-4">
+        <motion.div
+            className="min-h-screen flex items-center justify-center p-4"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
             <Card className="w-full max-w-screen-xl flex flex-col sm:flex-row overflow-hidden">
                 <div className="flex-1 hidden sm:block relative h-64 sm:h-auto">
                     <Image
-                        //src="https://images.unsplash.com/photo-1502920514313-52581002a659?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         src={signupImage}
                         alt="Sign up background"
                         layout="fill"
                         objectFit="cover"
                     />
                 </div>
-                <div className="w-full sm:w-1/2 lg:w-2/5 p-0 sm:p-8">
+                <motion.div
+                    className="w-full sm:w-1/2 lg:w-2/5 p-0 sm:p-8"
+                    variants={itemVariants}
+                >
                     <CardHeader className="text-center">
-                        <div className="mb-4">
+                        <motion.div className="mb-4" variants={itemVariants}>
                             <h1 className="text-3xl sm:text-4xl font-extrabold">JourneyMate</h1>
-                        </div>
-                        <CardTitle className="text-xl sm:text-2xl font-semibold">Create your account</CardTitle>
-                        <CardDescription>
-                            Or{' '}
-                            <Link href="/auth/login" className="font-medium text-primary hover:underline">
-                                sign in to your account
-                            </Link>
-                        </CardDescription>
+                        </motion.div>
+                        <motion.div variants={itemVariants}>
+                            <CardTitle className="text-xl sm:text-2xl font-semibold">Create your account</CardTitle>
+                        </motion.div>
+                        <motion.div variants={itemVariants}>
+                            <CardDescription>
+                                Or{' '}
+                                <Link href="/auth/signin" className="font-medium text-primary hover:underline">
+                                    sign in to your account
+                                </Link>
+                            </CardDescription>
+                        </motion.div>
                     </CardHeader>
                     <CardContent>
-                        <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-6">
+                        <motion.div
+                            className="mt-6 sm:mt-8 space-y-4 sm:space-y-6"
+                            variants={itemVariants}
+                        >
                             <Button
                                 variant="outline"
                                 className="w-full"
@@ -195,11 +236,11 @@ const SignUp: React.FC = () => {
                                     </Button>
                                 </div>
                             </form>
-                        </div>
+                        </motion.div>
                     </CardContent>
-                </div>
+                </motion.div>
             </Card>
-        </div>
+        </motion.div>
     );
 };
 
