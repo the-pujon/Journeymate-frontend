@@ -1,7 +1,7 @@
 'use client'
 
 import React,{ useState } from 'react';
-import { User,Settings,MapPin,Calendar,Link as LinkIcon,ChevronDown,ChevronUp,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,CheckCircle,Users,ExternalLink } from 'lucide-react';
+import { User,Settings,MapPin,Calendar,Link as LinkIcon,ChevronDown,ChevronUp,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,CheckCircle,Users,ExternalLink,Pencil,Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
@@ -104,6 +104,16 @@ const MyProfile = () => {
         }));
     };
 
+    const handleEditPost = (postId: string) => {
+        // Implement edit functionality here
+        console.log(`Editing post ${postId}`);
+    };
+
+    const handleDeletePost = (postId: string) => {
+        // Implement delete functionality here
+        console.log(`Deleting post ${postId}`);
+    };
+
     return (
         <div className=" px-4 py-8 wrapper">
             <Card className="mb-8">
@@ -153,8 +163,8 @@ const MyProfile = () => {
                     {user.posts.map(({ post }) => (
                         <Card key={post._id} className="mb-6">
                             <CardHeader>
-                                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
-                                    <div className="flex items-center space-x-4">
+                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                                    <div className="flex items-center space-x-4 mb-4 sm:mb-0">
                                         <Avatar>
                                             <AvatarImage src={user.profilePicture} alt={user.user.name} />
                                             <AvatarFallback>{user.user.name.charAt(0)}</AvatarFallback>
@@ -164,12 +174,20 @@ const MyProfile = () => {
                                             <CardDescription>{new Date(post.createdAt).toLocaleDateString()}</CardDescription>
                                         </div>
                                     </div>
-                                    {post.premium && (
-                                        <Badge variant="secondary" className="self-start sm:self-center">
-                                            <Bookmark className="w-4 h-4 mr-1" />
-                                            Premium
-                                        </Badge>
-                                    )}
+                                    <div className="flex items-center space-x-2">
+                                        {post.premium && (
+                                            <Badge variant="secondary">
+                                                <Bookmark className="w-4 h-4 mr-1" />
+                                                Premium
+                                            </Badge>
+                                        )}
+                                        <Button variant="ghost" size="icon" onClick={() => handleEditPost(post._id)}>
+                                            <Pencil className="h-4 w-4" />
+                                        </Button>
+                                        <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post._id)}>
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -199,9 +217,9 @@ const MyProfile = () => {
                                     ))}
                                 </div>
                             </CardContent>
-                            <CardFooter className="flex flex-col items-start">
-                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mb-2 space-y-2 sm:space-y-0">
-                                    <div className="flex items-center sm:space-x-4">
+                            <CardFooter>
+                                <div className="w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                    <div className="flex flex-wrap items-center gap-0 sm:gap-2">
                                         <Button
                                             variant="ghost"
                                             size="sm"
@@ -225,14 +243,12 @@ const MyProfile = () => {
                                             <span>{post.totalComments}</span>
                                         </Button>
                                     </div>
-                                    <Link href={`/dashboard/posts/${post._id}`} passHref>
-                                        <Button variant="outline" size="sm" className="flex items-center space-x-2 w-full sm:w-auto">
-                                            <ExternalLink className="h-4 w-4" />
-                                            <span>View Full Post</span>
+                                    <Link href={`/dashboard/posts/${post._id}`} className="w-full sm:w-auto">
+                                        <Button variant="outline" size="sm" className="w-full">
+                                            View Full Post
                                         </Button>
                                     </Link>
                                 </div>
-                                <Separator className="w-full" />
                             </CardFooter>
                         </Card>
                     ))}
