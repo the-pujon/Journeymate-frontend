@@ -1,13 +1,14 @@
 'use client'
 
 import React,{ useState } from 'react';
-import { User,Settings,MapPin,Calendar,Link as LinkIcon,ChevronDown,ChevronUp,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,CheckCircle } from 'lucide-react';
+import { User,Settings,MapPin,Calendar,Link as LinkIcon,ChevronDown,ChevronUp,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,CheckCircle,Users,ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Tabs,TabsContent,TabsList,TabsTrigger } from "@/components/ui/tabs";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import Link from 'next/link';
 
 // Updated dummy data to match the TUserProfile and TPost interfaces
 const dummyUser = {
@@ -20,12 +21,12 @@ const dummyUser = {
     profilePicture: 'https://source.unsplash.com/random/100x100?face',
     bio: 'Passionate traveler | Photography enthusiast | Coffee lover',
     followers: [
-        { userProfile: { _id: 'f1',name: 'Alice Smith',profilePicture: 'https://source.unsplash.com/random/100x100?woman' } },
-        { userProfile: { _id: 'f2',name: 'Bob Johnson',profilePicture: 'https://source.unsplash.com/random/100x100?man' } },
+        { userProfile: { _id: 'f1',name: 'Alice Smith',email: 'alice@example.com',profilePicture: 'https://source.unsplash.com/random/100x100?woman',totalFollowers: 250,totalFollowing: 300,verified: true } },
+        { userProfile: { _id: 'f2',name: 'Bob Johnson',email: 'bob@example.com',profilePicture: 'https://source.unsplash.com/random/100x100?man',totalFollowers: 180,totalFollowing: 220,verified: false } },
     ],
     following: [
-        { userProfile: { _id: 'g1',name: 'Emma Wilson',profilePicture: 'https://source.unsplash.com/random/100x100?girl' } },
-        { userProfile: { _id: 'g2',name: 'Michael Brown',profilePicture: 'https://source.unsplash.com/random/100x100?boy' } },
+        { userProfile: { _id: 'g1',name: 'Emma Wilson',email: 'emma@example.com',profilePicture: 'https://source.unsplash.com/random/100x100?girl',totalFollowers: 500,totalFollowing: 450,verified: true } },
+        { userProfile: { _id: 'g2',name: 'Michael Brown',email: 'michael@example.com',profilePicture: 'https://source.unsplash.com/random/100x100?boy',totalFollowers: 320,totalFollowing: 280,verified: false } },
     ],
     posts: [
         {
@@ -104,39 +105,37 @@ const MyProfile = () => {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className=" px-4 py-8 wrapper">
             <Card className="mb-8">
                 <CardHeader>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
                         <Avatar className="w-24 h-24">
                             <AvatarImage src={user.profilePicture} alt={user.user.name} />
                             <AvatarFallback>{user.user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <div>
-                            <div className="flex items-center space-x-2">
+                        <div className="text-center sm:text-left flex-grow">
+                            <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-2 sm:space-y-0 sm:space-x-2">
                                 <CardTitle className="text-2xl font-bold">{user.user.name}</CardTitle>
                                 {user.verified && (
-                                    <Badge variant="secondary">
+                                    <Badge variant="secondary" className="mt-1 sm:mt-0">
                                         <CheckCircle className="w-4 h-4 mr-1" />
                                         Verified
                                     </Badge>
                                 )}
                             </div>
                             <CardDescription>{user.user.email}</CardDescription>
+                            <p className="mt-2">{user.bio}</p>
+                            <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-2 text-sm text-gray-500">
+                                <span className="flex items-center"><ThumbsUp className="w-4 h-4 mr-1" /> {user.totalUpvotes} Total Upvotes</span>
+                                {user.verificationRequestDate && (
+                                    <span className="flex items-center"><Calendar className="w-4 h-4 mr-1" /> Verified since {new Date(user.verificationRequestDate).toLocaleDateString()}</span>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <p className="mb-4">{user.bio}</p>
-                    <div className="flex space-x-4 text-sm text-gray-500">
-                        <span className="flex items-center"><ThumbsUp className="w-4 h-4 mr-1" /> {user.totalUpvotes} Total Upvotes</span>
-                        {user.verificationRequestDate && (
-                            <span className="flex items-center"><Calendar className="w-4 h-4 mr-1" /> Verified since {new Date(user.verificationRequestDate).toLocaleDateString()}</span>
-                        )}
-                    </div>
-                </CardContent>
                 <CardFooter>
-                    <div className="flex space-x-4">
+                    <div className="flex flex-wrap justify-center sm:justify-start gap-4 w-full">
                         <span><strong>{user.followers.length}</strong> Followers</span>
                         <span><strong>{user.following.length}</strong> Following</span>
                         <span><strong>{user.posts.length}</strong> Posts</span>
@@ -146,15 +145,15 @@ const MyProfile = () => {
 
             <Tabs defaultValue="posts" className="w-full">
                 <TabsList>
-                    <TabsTrigger value="posts" onClick={() => setActiveTab('posts')}>Posts</TabsTrigger>
-                    <TabsTrigger value="followers" onClick={() => setActiveTab('followers')}>Followers</TabsTrigger>
-                    <TabsTrigger value="following" onClick={() => setActiveTab('following')}>Following</TabsTrigger>
+                    <TabsTrigger value="posts">Posts</TabsTrigger>
+                    <TabsTrigger value="followers">Followers</TabsTrigger>
+                    <TabsTrigger value="following">Following</TabsTrigger>
                 </TabsList>
                 <TabsContent value="posts">
                     {user.posts.map(({ post }) => (
                         <Card key={post._id} className="mb-6">
                             <CardHeader>
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-2 sm:space-y-0">
                                     <div className="flex items-center space-x-4">
                                         <Avatar>
                                             <AvatarImage src={user.profilePicture} alt={user.user.name} />
@@ -166,7 +165,7 @@ const MyProfile = () => {
                                         </div>
                                     </div>
                                     {post.premium && (
-                                        <Badge variant="secondary">
+                                        <Badge variant="secondary" className="self-start sm:self-center">
                                             <Bookmark className="w-4 h-4 mr-1" />
                                             Premium
                                         </Badge>
@@ -176,7 +175,7 @@ const MyProfile = () => {
                             <CardContent>
                                 <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
                                 {post.image && post.image.length > 0 && (
-                                    <img src={post.image[0]} alt={post.title} className="w-full h-64 object-cover mb-4 rounded-md" />
+                                    <img src={post.image[0]} alt={post.title} className="w-full h-48 sm:h-64 object-cover mb-4 rounded-md" />
                                 )}
                                 <p className={`text-gray-600 ${expandedPosts.includes(post._id) ? '' : 'line-clamp-3'}`}>
                                     {post.content}
@@ -201,8 +200,8 @@ const MyProfile = () => {
                                 </div>
                             </CardContent>
                             <CardFooter className="flex flex-col items-start">
-                                <div className="flex items-center justify-between w-full mb-2">
-                                    <div className="flex items-center space-x-4">
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full mb-2 space-y-2 sm:space-y-0">
+                                    <div className="flex items-center sm:space-x-4">
                                         <Button
                                             variant="ghost"
                                             size="sm"
@@ -226,6 +225,12 @@ const MyProfile = () => {
                                             <span>{post.totalComments}</span>
                                         </Button>
                                     </div>
+                                    <Link href={`/dashboard/posts/${post._id}`} passHref>
+                                        <Button variant="outline" size="sm" className="flex items-center space-x-2 w-full sm:w-auto">
+                                            <ExternalLink className="h-4 w-4" />
+                                            <span>View Full Post</span>
+                                        </Button>
+                                    </Link>
                                 </div>
                                 <Separator className="w-full" />
                             </CardFooter>
@@ -236,19 +241,40 @@ const MyProfile = () => {
                     {user.followers.map(({ userProfile }) => (
                         <Card key={userProfile._id} className="mb-4">
                             <CardHeader>
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                                     <div className="flex items-center space-x-4">
                                         <Avatar>
                                             <AvatarImage src={userProfile.profilePicture} alt={userProfile.name} />
                                             <AvatarFallback>{userProfile.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <CardTitle>{userProfile.name}</CardTitle>
+                                            <div className="flex items-center space-x-2">
+                                                <CardTitle>{userProfile.name}</CardTitle>
+                                                {userProfile.verified && (
+                                                    <Badge variant="secondary">
+                                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                                        Verified
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <CardDescription>{userProfile.email}</CardDescription>
                                         </div>
                                     </div>
-                                    <Button>Follow Back</Button>
+                                    <Button className="w-full sm:w-auto">Follow Back</Button>
                                 </div>
                             </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col sm:flex-row justify-between text-sm text-gray-500 space-y-2 sm:space-y-0">
+                                    <span className="flex items-center">
+                                        <Users className="w-4 h-4 mr-1" />
+                                        {userProfile.totalFollowers} Followers
+                                    </span>
+                                    <span className="flex items-center">
+                                        <Users className="w-4 h-4 mr-1" />
+                                        {userProfile.totalFollowing} Following
+                                    </span>
+                                </div>
+                            </CardContent>
                         </Card>
                     ))}
                 </TabsContent>
@@ -256,19 +282,40 @@ const MyProfile = () => {
                     {user.following.map(({ userProfile }) => (
                         <Card key={userProfile._id} className="mb-4">
                             <CardHeader>
-                                <div className="flex items-center justify-between">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                                     <div className="flex items-center space-x-4">
                                         <Avatar>
                                             <AvatarImage src={userProfile.profilePicture} alt={userProfile.name} />
                                             <AvatarFallback>{userProfile.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <CardTitle>{userProfile.name}</CardTitle>
+                                            <div className="flex items-center space-x-2">
+                                                <CardTitle>{userProfile.name}</CardTitle>
+                                                {userProfile.verified && (
+                                                    <Badge variant="secondary">
+                                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                                        Verified
+                                                    </Badge>
+                                                )}
+                                            </div>
+                                            <CardDescription>{userProfile.email}</CardDescription>
                                         </div>
                                     </div>
-                                    <Button variant="outline">Unfollow</Button>
+                                    <Button variant="outline" className="w-full sm:w-auto">Unfollow</Button>
                                 </div>
                             </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col sm:flex-row justify-between text-sm text-gray-500 space-y-2 sm:space-y-0">
+                                    <span className="flex items-center">
+                                        <Users className="w-4 h-4 mr-1" />
+                                        {userProfile.totalFollowers} Followers
+                                    </span>
+                                    <span className="flex items-center">
+                                        <Users className="w-4 h-4 mr-1" />
+                                        {userProfile.totalFollowing} Following
+                                    </span>
+                                </div>
+                            </CardContent>
                         </Card>
                     ))}
                 </TabsContent>
@@ -276,5 +323,6 @@ const MyProfile = () => {
         </div>
     );
 };
+
 
 export default MyProfile;
