@@ -11,7 +11,6 @@ import { CheckCircle,X,Shield,Award,Star,ThumbsUp } from 'lucide-react';
 import { toast } from 'sonner';
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -64,6 +63,7 @@ const VerifyUser = () => {
             toast.success('Verification request submitted successfully');
         } catch (error) {
             toast.error('Failed to submit verification request');
+            console.error(error);
         }
     };
 
@@ -73,48 +73,48 @@ const VerifyUser = () => {
 
     return (
         <motion.div
-            className="container mx-auto px-4 py-8 max-w-6xl"
+            className="container mx-auto px-4 py-12 max-w-6xl"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
         >
-            <h1 className="text-4xl font-bold mb-8 text-center">User Verification</h1>
-            <div className="grid md:grid-cols-2 gap-8">
+            <h1 className="text-4xl font-bold mb-12 text-center">User Verification</h1>
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
                 <motion.div variants={itemVariants}>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl font-bold flex items-center">
-                                <Shield className="mr-2" /> Free User
+                    <Card className="h-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <CardHeader className=" border-b">
+                            <CardTitle className="text-2xl font-bold flex items-center text-gray-800">
+                                <Shield className="mr-2 text-blue-500" /> Free User
                             </CardTitle>
                             <CardDescription>Current features</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <ul className="space-y-3">
-                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600" /> Basic profile</li>
-                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600" /> Create posts</li>
-                                <li className="flex items-center text-gray-500"><X className="mr-2 text-red-600" /> Verified badge</li>
-                                <li className="flex items-center text-gray-500"><X className="mr-2 text-red-600" /> Premium features</li>
+                        <CardContent className="pt-6">
+                            <ul className="space-y-4">
+                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Basic profile</span></li>
+                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Create posts</span></li>
+                                <li className="flex items-center text-gray-500"><X className="mr-2 text-red-600 flex-shrink-0" /> <span>Verified badge</span></li>
+                                <li className="flex items-center text-gray-500"><X className="mr-2 text-red-600 flex-shrink-0" /> <span>Premium features</span></li>
                             </ul>
                         </CardContent>
                     </Card>
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="text-2xl font-bold flex items-center">
-                                <Award className="mr-2" /> Verified User
+                    <Card className="h-full shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <CardHeader className=" border-b">
+                            <CardTitle className="text-2xl font-bold flex items-center text-gray-800">
+                                <Award className="mr-2 text-purple-500" /> Verified User
                             </CardTitle>
                             <CardDescription>Premium features</CardDescription>
                         </CardHeader>
-                        <CardContent>
-                            <ul className="space-y-3">
-                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600" /> All free features</li>
-                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600" /> Verified badge</li>
-                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600" /> Priority support</li>
-                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600" /> Exclusive content</li>
+                        <CardContent className="pt-6">
+                            <ul className="space-y-4">
+                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>All free features</span></li>
+                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Verified badge</span></li>
+                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Priority support</span></li>
+                                <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Exclusive content</span></li>
                             </ul>
                         </CardContent>
-                        <CardFooter>
+                        <CardFooter className="pt-6">
                             {userProfile?.data.totalUpvotes === 0 ? (
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
@@ -141,32 +141,32 @@ const VerifyUser = () => {
                     </Card>
                 </motion.div>
             </div>
-            <motion.div variants={itemVariants} className="mt-8">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-2xl font-bold flex items-center">
-                            <Star className="mr-2" /> Your Verification Status
+            <motion.div variants={itemVariants}>
+                <Card className="shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <CardHeader className=" border-b">
+                        <CardTitle className="text-2xl font-bold flex items-center text-gray-800">
+                            <Star className="mr-2 text-yellow-500" /> Your Verification Status
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
+                    <CardContent className="pt-6">
+                        <div className="space-y-4">
                             <p className="flex items-center">
-                                <ThumbsUp className="mr-2" />
-                                <strong>Total Upvotes:</strong>
-                                <span className="ml-2 px-3 py-1 bg-gray-100 rounded-full">{userProfile?.data.totalUpvotes}</span>
+                                <ThumbsUp className="mr-2 text-blue-500 flex-shrink-0" />
+                                <strong className="mr-2">Total Upvotes:</strong>
+                                <span className="px-3 py-1 bg-gray-100 rounded-full">{userProfile?.data.totalUpvotes}</span>
                             </p>
                             <p className="flex items-center">
-                                <Shield className="mr-2" />
-                                <strong>Verified:</strong>
-                                <span className={`ml-2 px-3 py-1 ${userProfile?.data.verified ? 'bg-green-100' : 'bg-red-100'} rounded-full`}>
+                                <Shield className="mr-2 text-green-500 flex-shrink-0" />
+                                <strong className="mr-2">Verified:</strong>
+                                <span className={`px-3 py-1 ${userProfile?.data.verified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'} rounded-full`}>
                                     {userProfile?.data.verified ? 'Yes' : 'No'}
                                 </span>
                             </p>
                             {userProfile?.data.verificationRequestDate && (
                                 <p className="flex items-center">
-                                    <Award className="mr-2" />
-                                    <strong>Last Verification Request:</strong>
-                                    <span className="ml-2 px-3 py-1 bg-gray-100 rounded-full">
+                                    <Award className="mr-2 text-purple-500 flex-shrink-0" />
+                                    <strong className="mr-2">Last Verification Request:</strong>
+                                    <span className="px-3 py-1 bg-gray-100 rounded-full">
                                         {new Date(userProfile.data.verificationRequestDate).toLocaleDateString()}
                                     </span>
                                 </p>
