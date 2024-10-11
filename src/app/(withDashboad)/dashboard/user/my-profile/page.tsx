@@ -19,7 +19,7 @@ const MyProfile = () => {
     const currentUser = useAppSelector(selectCurrentUser)
     const userId = currentUser?._id
 
-    const { data: userProfile,isLoading,isError } = useGetUserByIdQuery(userId);
+    const { data: userProfile,isLoading,isError } = useGetUserByIdQuery(userId || '');
 
     const cardVariants = {
         hidden: { opacity: 0,y: 20 },

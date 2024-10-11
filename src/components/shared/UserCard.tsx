@@ -51,26 +51,26 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                     <div className="flex items-center space-x-4">
                         <Avatar>
-                            <AvatarImage src={user.profilePicture} alt={user.user.name} />
-                            <AvatarFallback>{user.user.name.charAt(0)}</AvatarFallback>
+                            <AvatarImage src={user?.profilePicture} alt={user?.user?.name} />
+                            <AvatarFallback>{user?.user?.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div>
                             <div className="flex items-center space-x-2">
-                                <CardTitle>{user.user.name}</CardTitle>
-                                {user.verified && (
+                                <CardTitle>{user?.user.name}</CardTitle>
+                                {user?.verified && (
                                     <Badge variant="secondary">
                                         <CheckCircle className="w-3 h-3 mr-1" />
                                         Verified
                                     </Badge>
                                 )}
                             </div>
-                            <CardDescription>{user.user.email}</CardDescription>
+                            <CardDescription>{user?.user.email}</CardDescription>
                         </div>
                     </div>
                     <Button
                         className="w-full sm:w-auto"
                         //onClick={() => onFollowToggle(user._id)}
-                        onClick={() => followHandler(user.user._id,isFollowing)}
+                        onClick={() => followHandler(user?.user._id,isFollowing)}
                         disabled={followLoading || unfollowLoading}
                     >
                         {isFollowing ? 'Unfollow' : 'Follow'}
@@ -82,11 +82,11 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                 <div className="flex flex-col sm:flex-row justify-between text-sm text-gray-500 space-y-2 sm:space-y-0">
                     <span className="flex items-center">
                         <Users className="w-4 h-4 mr-1" />
-                        {user.followers?.length || 0} Followers
+                        {user?.followers?.length || 0} Followers
                     </span>
                     <span className="flex items-center">
                         <Users className="w-4 h-4 mr-1" />
-                        {user.following?.length || 0} Following
+                        {user?.following?.length || 0} Following
                     </span>
                 </div>
             </CardContent>
