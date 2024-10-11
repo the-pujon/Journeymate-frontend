@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname,useRouter } from 'next/navigation';
-import { Home,User,Settings,HelpCircle,LogOut } from 'lucide-react';
+import { Home,User,Pencil,HelpCircle,LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppDispatch } from '@/redux/hook';
 import { signOut } from '@/redux/features/auth/authSlice';
@@ -11,7 +11,7 @@ import { signOut } from '@/redux/features/auth/authSlice';
 const navItems = [
     { href: '/dashboard',label: 'Dashboard',icon: Home },
     { href: '/dashboard/user/my-profile',label: 'My Profile',icon: User },
-    { href: '/dashboard/settings',label: 'Settings',icon: Settings },
+    { href: '/dashboard/user/edit-profile',label: 'Update Profile',icon: Pencil },
     { href: '/dashboard/help',label: 'Help',icon: HelpCircle },
 ];
 
