@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname,useRouter } from 'next/navigation';
-import { Home,User,Pencil,Lock,LogOut,CheckCircle,FileText,Users } from 'lucide-react';
+import { Home,User,Pencil,Lock,LogOut,CheckCircle,FileText,Users,CreditCard } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppDispatch } from '@/redux/hook';
 import { signOut } from '@/redux/features/auth/authSlice';
@@ -16,6 +16,7 @@ const navItems = [
     { href: '/dashboard/user/verify-user',label: 'Verify User',icon: CheckCircle },
     { href: '/dashboard/admin/content-management',label: 'Content Management',icon: FileText },
     { href: '/dashboard/admin/user-management',label: 'User Management',icon: Users },
+    { href: '/dashboard/admin/payment-management',label: 'Payment Management',icon: CreditCard },
 ];
 
 
