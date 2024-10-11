@@ -5,7 +5,7 @@ const voteApi = baseApi.injectEndpoints({
     // Get vote for a specific post
     getVote: builder.query({
       query: (postId) => ({
-        url: `/vote/${postId}`,
+        url: `/votes/${postId}`,
         method: "GET",
       }),
       providesTags: (result, error, postId) => [{ type: "Vote", id: postId }],

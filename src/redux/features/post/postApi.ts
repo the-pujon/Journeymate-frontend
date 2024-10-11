@@ -80,6 +80,7 @@ const postApi = baseApi.injectEndpoints({
         { type: "Posts", id },
         "Posts",
         "Users",
+        "Vote",
       ],
     }),
 
@@ -93,6 +94,7 @@ const postApi = baseApi.injectEndpoints({
         { type: "Posts", id },
         "Posts",
         "Users",
+        "Vote",
       ],
     }),
   }),
