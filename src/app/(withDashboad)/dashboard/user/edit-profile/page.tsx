@@ -12,8 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { toast } from 'sonner';
-import { Loader2,Camera,User,FileText } from 'lucide-react';
+import { Camera,User,FileText,Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import Loading from '@/components/shared/Loading';
 
 interface EditProfileFormInputs {
     name: string;
@@ -128,7 +129,7 @@ const EditProfile = () => {
         },
     };
 
-    if (isLoading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin h-8 w-8" /></div>;
+    if (isLoading) return <Loading />;
     if (isError) return <div className="text-center text-red-500 mt-8">Error loading profile</div>;
 
     return (
