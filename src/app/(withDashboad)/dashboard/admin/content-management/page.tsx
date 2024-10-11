@@ -16,7 +16,6 @@ import Loading from '@/components/shared/Loading';
 import { Input } from "@/components/ui/input";
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
 import { useDebounce } from '@/hooks/useDebounce';
-//import { useDebounce } from 'use-debounce';
 
 const ContentManagement = () => {
     const [searchTerm,setSearchTerm] = useState('');
@@ -29,7 +28,6 @@ const ContentManagement = () => {
         sortOrder
     });
     const [deletePost,{ isLoading: isDeleting }] = useDeletePostMutation();
-    //const [selectedPost,setSelectedPost] = useState(null);
 
     const handleDeletePost = async (id: string) => {
         try {
@@ -46,10 +44,6 @@ const ContentManagement = () => {
         refetch();
     },[debouncedSearchTerm,category,sortOrder,refetch]);
 
-    //if (isLoading) {
-    //    return <Loading />;
-    //}
-
     if (error) {
         return <div className="text-center text-red-500 mt-8 text-xl">Error loading posts</div>;
     }
@@ -59,11 +53,11 @@ const ContentManagement = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="container mx-auto px-4 py-12"
+            className="container mx-auto sm:px-4 py-8 sm:py-12"
         >
-            <h1 className="text-4xl font-bold mb-12 text-center text-primary">Content Management</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-12 text-center text-primary">Content Management</h1>
 
-            <div className="mb-8 flex flex-col md:flex-row gap-4">
+            <div className="mb-8 flex flex-col sm:flex-row gap-4">
                 <div className="relative flex-grow">
                     <Input
                         type="text"
@@ -74,34 +68,33 @@ const ContentManagement = () => {
                     />
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 </div>
-                <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="w-full md:w-[180px]">
-                        <SelectValue placeholder="Category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Categories</SelectItem>
-                        <SelectItem value="Technology">Technology</SelectItem>
-                        <SelectItem value="Science">Science</SelectItem>
-                        <SelectItem value="Health">Health</SelectItem>
-                        {/* Add more categories as needed */}
-                    </SelectContent>
-                </Select>
-                <Select value={sortOrder} onValueChange={setSortOrder}>
-                    <SelectTrigger className="w-full md:w-[180px]">
-                        <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="desc">Most Upvotes</SelectItem>
-                        <SelectItem value="asc">Least Upvotes</SelectItem>
-                    </SelectContent>
-                </Select>
+                <div className="flex flex-col sm:flex-row gap-4 sm:w-auto">
+                    <Select value={category} onValueChange={setCategory}>
+                        <SelectTrigger className="w-full sm:w-[180px]">
+                            <SelectValue placeholder="Category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            <SelectItem value="Technology">Technology</SelectItem>
+                            <SelectItem value="Science">Science</SelectItem>
+                            <SelectItem value="Health">Health</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Select value={sortOrder} onValueChange={setSortOrder}>
+                        <SelectTrigger className="w-full sm:w-[180px]">
+                            <SelectValue placeholder="Sort by" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="desc">Most Upvotes</SelectItem>
+                            <SelectItem value="asc">Least Upvotes</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
-            {
-                isLoading ? <Loading /> : null
-            }
+            {isLoading ? <Loading /> : null}
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
                 {posts?.data.map((post: any) => (
                     <motion.div
@@ -117,7 +110,7 @@ const ContentManagement = () => {
                                 </div>
                             )}
                             {post.image && post.image.length > 0 && (
-                                <div className="relative w-full h-48 overflow-hidden">
+                                <div className="relative w-full h-40 sm:h-48 overflow-hidden">
                                     <Image
                                         src={post.image[0]}
                                         alt={post.title}
@@ -129,7 +122,7 @@ const ContentManagement = () => {
                             )}
                             <CardHeader className="pb-3">
                                 <div className="flex justify-between items-start mb-2">
-                                    <CardTitle className="truncate text-xl text-primary flex-grow pr-2">{post.title}</CardTitle>
+                                    <CardTitle className="truncate text-lg sm:text-xl text-primary flex-grow pr-2">{post.title}</CardTitle>
                                     <Badge variant="secondary" className="ml-2 flex-shrink-0">
                                         <Bookmark className="h-3 w-3 mr-1" />
                                         {post.category}
@@ -140,9 +133,9 @@ const ContentManagement = () => {
                                         <AvatarImage src={post.author.profilePicture} />
                                         <AvatarFallback>{post.author.user?.name?.charAt(0)}</AvatarFallback>
                                     </Avatar>
-                                    <span className="text-sm text-muted-foreground">{post.author.user?.name}</span>
+                                    <span className="text-xs sm:text-sm text-muted-foreground">{post.author.user?.name}</span>
                                     {post.author.verified && (
-                                        <Badge variant="secondary" className="ml-2">Verified</Badge>
+                                        <Badge variant="secondary" className="ml-2 text-xs">Verified</Badge>
                                     )}
                                 </CardDescription>
                                 <div className="text-xs text-muted-foreground mt-2 flex items-center">
@@ -151,20 +144,20 @@ const ContentManagement = () => {
                                 </div>
                             </CardHeader>
                             <CardContent className="flex-grow">
-                                <p className="line-clamp-3 text-sm text-card-foreground">{post.content}</p>
-                                <div className="flex items-center mt-4 space-x-4 text-sm text-muted-foreground">
+                                <p className="line-clamp-3 text-xs sm:text-sm text-card-foreground">{post.content}</p>
+                                <div className="flex items-center mt-4 space-x-4 text-xs sm:text-sm text-muted-foreground">
                                     <span className="flex items-center">
-                                        <ThumbsUp className="h-4 w-4 mr-1 text-green-500" /> {post.upVotes}
+                                        <ThumbsUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-green-500" /> {post.upVotes}
                                     </span>
                                     <span className="flex items-center">
-                                        <ThumbsDown className="h-4 w-4 mr-1 text-red-500" /> {post.downVotes}
+                                        <ThumbsDown className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-red-500" /> {post.downVotes}
                                     </span>
                                     <span className="flex items-center">
-                                        <MessageSquare className="h-4 w-4 mr-1 text-blue-500" /> {post.totalComments}
+                                        <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-blue-500" /> {post.totalComments}
                                     </span>
                                     {post.image && post.image.length > 1 && (
                                         <span className="flex items-center">
-                                            <ImageIcon className="h-4 w-4 mr-1 text-purple-500" /> {post.image.length}
+                                            <ImageIcon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-purple-500" /> {post.image.length}
                                         </span>
                                     )}
                                 </div>
@@ -175,16 +168,16 @@ const ContentManagement = () => {
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-between items-center pt-4 border-t">
-                                <Button variant="secondary" size="sm">
+                                <Button variant="secondary" size="sm" className="text-xs sm:text-sm">
                                     <Link href={`/post/${post._id}`} className="flex items-center">
-                                        <ExternalLink className="h-4 w-4 mr-1" />
+                                        <ExternalLink className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                                         See Full Post
                                     </Link>
                                 </Button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                        <Button variant="destructive" size="sm">
-                                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                        <Button variant="destructive" size="sm" className="text-xs sm:text-sm">
+                                            <Trash2 className="mr-2 h-3 w-3 sm:h-4 sm:w-4" /> Delete
                                         </Button>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>

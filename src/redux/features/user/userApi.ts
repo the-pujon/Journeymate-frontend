@@ -4,10 +4,12 @@ const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Get all users
     getUsers: builder.query({
-      query: () => ({
-        url: "/users",
-        method: "GET",
-      }),
+      query: ({ searchTerm = "" }) => {
+        return {
+          url: `/users?searchQuery=${searchTerm}`,
+          method: "GET",
+        };
+      },
       providesTags: ["Users"],
     }),
 
