@@ -13,6 +13,7 @@ import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { toast } from 'sonner';
 import { Loader2,Camera,User,FileText } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface EditProfileFormInputs {
     name: string;
@@ -101,19 +102,58 @@ const EditProfile = () => {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0,y: 50 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: 'spring',
+                damping: 20,
+                stiffness: 100
+            }
+        },
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0,x: -20 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: {
+                type: 'spring',
+                damping: 25,
+                stiffness: 120
+            }
+        },
+    };
+
     if (isLoading) return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin h-8 w-8" /></div>;
     if (isError) return <div className="text-center text-red-500 mt-8">Error loading profile</div>;
 
     return (
-        <div className="container mx-auto px-0 sm:px-4 py-8 max-w-2xl">
+        <motion.div
+            className="container mx-auto px-0 sm:px-4 py-8 max-w-2xl"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
             <Card className="shadow-lg">
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl font-bold">Edit Your Profile</CardTitle>
-                    <CardDescription>Customize your profile information</CardDescription>
+                    <motion.div variants={itemVariants}>
+                        <CardTitle className="text-2xl font-bold">Edit Your Profile</CardTitle>
+                        <CardDescription>Customize your profile information</CardDescription>
+                    </motion.div>
                 </CardHeader>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <CardContent className="space-y-6">
-                        <div className="flex flex-col items-center space-y-4">
+                        <motion.div
+                            className="flex flex-col items-center space-y-4"
+                            variants={itemVariants}
+                            initial="hidden"
+                            animate="visible"
+                            transition={{ delay: 0.1 }}
+                        >
                             <div className="relative group">
                                 <Avatar className="w-32 h-32 border-4 border-white shadow-lg group-hover:opacity-75 transition-opacity">
                                     <AvatarImage src={previewImage || userProfile?.data.profilePicture} alt="Profile picture" />
@@ -133,8 +173,14 @@ const EditProfile = () => {
                             <label htmlFor="profilePicture" className="cursor-pointer text-sm text-blue-500 hover:text-blue-600 transition-colors">
                                 Change Profile Picture
                             </label>
-                        </div>
-                        <div className="space-y-2">
+                        </motion.div>
+                        <motion.div
+                            className="space-y-2"
+                            variants={itemVariants}
+                            initial="hidden"
+                            animate="visible"
+                            transition={{ delay: 0.2 }}
+                        >
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700 flex items-center">
                                 <User className="w-4 h-4 mr-2" /> Name
                             </label>
@@ -144,8 +190,14 @@ const EditProfile = () => {
                                 {...register('name',{ required: 'Name is required' })}
                                 className="w-full"
                             />
-                        </div>
-                        <div className="space-y-2">
+                        </motion.div>
+                        <motion.div
+                            className="space-y-2"
+                            variants={itemVariants}
+                            initial="hidden"
+                            animate="visible"
+                            transition={{ delay: 0.3 }}
+                        >
                             <label htmlFor="bio" className="block text-sm font-medium text-gray-700 flex items-center">
                                 <FileText className="w-4 h-4 mr-2" /> Bio
                             </label>
@@ -156,24 +208,31 @@ const EditProfile = () => {
                                 className="w-full"
                                 placeholder="Tell us about yourself..."
                             />
-                        </div>
+                        </motion.div>
                     </CardContent>
                     <CardFooter className="flex justify-end">
-                        <Button
-                            type="submit"
-                            disabled={isUpdating || isImageUploading}
-                            className="w-full sm:w-auto"
+                        <motion.div
+                            variants={itemVariants}
+                            initial="hidden"
+                            animate="visible"
+                            transition={{ delay: 0.4 }}
                         >
-                            {isUpdating || isImageUploading ? (
-                                <div className="flex items-center justify-center">
-                                    <Loader2 className="animate-spin mr-2" />Updating...
-                                </div>
-                            ) : 'Update Profile'}
-                        </Button>
+                            <Button
+                                type="submit"
+                                disabled={isUpdating || isImageUploading}
+                                className="w-full sm:w-auto"
+                            >
+                                {isUpdating || isImageUploading ? (
+                                    <div className="flex items-center justify-center">
+                                        <Loader2 className="animate-spin mr-2" />Updating...
+                                    </div>
+                                ) : 'Update Profile'}
+                            </Button>
+                        </motion.div>
                     </CardFooter>
                 </form>
             </Card>
-        </div>
+        </motion.div>
     );
 };
 
