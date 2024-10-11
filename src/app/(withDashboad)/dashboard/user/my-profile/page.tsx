@@ -12,6 +12,7 @@ import { selectCurrentUser } from '@/redux/features/auth/authSlice';
 import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
 import AboutUser from '@/components/shared/AboutUser';
+import { Loader2 } from 'lucide-react';
 
 const MyProfile = () => {
 
@@ -29,7 +30,7 @@ const MyProfile = () => {
 
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin h-8 w-8" /></div>;;
     }
 
     if (isError || !userProfile) {
