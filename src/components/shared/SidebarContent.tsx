@@ -2,9 +2,12 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname,useRouter } from 'next/navigation';
 import { Home,User,Settings,HelpCircle,LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAppDispatch } from '@/redux/hook';
+import { signOut } from '@/redux/features/auth/authSlice';
+import { Button } from '../ui/button';
 
 const navItems = [
     { href: '/dashboard',label: 'Dashboard',icon: Home },
@@ -16,6 +19,13 @@ const navItems = [
 
 const SidebarContent = ({ onClose }: { onClose?: () => void }) => {
     const pathname = usePathname();
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+
+    const handleLogout = () => {
+        dispatch(signOut());
+        router.push('/auth/signin');
+    }
 
     return (
         <div className="h-full flex flex-col justify-between min-h-[95vh]">
@@ -47,14 +57,14 @@ const SidebarContent = ({ onClose }: { onClose?: () => void }) => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                 >
-                    <Link
-                        href="/auth/signin"
-                        className="flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 text-gray-600 hover:bg-gray-100"
-                        onClick={onClose}
+                    <button
+                        //href="/auth/signin"
+                        className="w-full border-secondary border flex items-center space-x-2 py-2.5 px-4 rounded transition duration-200 text-gray-600 hover:bg-primary/20"
+                        onClick={handleLogout}
                     >
                         <LogOut className="w-5 h-5" />
                         <span>Logout</span>
-                    </Link>
+                    </button>
                 </motion.div>
             </div>
         </div>

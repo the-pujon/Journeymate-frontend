@@ -196,7 +196,7 @@ const SignIn: React.FC = () => {
                                     </div>
 
                                     <div className="text-sm">
-                                        <Link href="/auth/forgot-password" className="font-medium text-primary hover:underline">
+                                        <Link href="/auth/request-recovery" className="font-medium text-primary hover:underline">
                                             Forgot your password?
                                         </Link>
                                     </div>

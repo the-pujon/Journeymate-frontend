@@ -5,7 +5,7 @@ const userApi = baseApi.injectEndpoints({
     // Get all users
     getUsers: builder.query({
       query: () => ({
-        url: "/user",
+        url: "/users",
         method: "GET",
       }),
       providesTags: ["Users"],
@@ -14,7 +14,7 @@ const userApi = baseApi.injectEndpoints({
     // Get user by ID
     getUserById: builder.query({
       query: (id) => ({
-        url: `/user/${id}`,
+        url: `/users/${id}`,
         method: "GET",
       }),
       providesTags: (result, error, id) => [{ type: "User", id }],
@@ -23,7 +23,7 @@ const userApi = baseApi.injectEndpoints({
     // Update user profile
     updateUserProfile: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/user/${id}`,
+        url: `/users/${id}`,
         method: "PATCH",
         body: data,
       }),
@@ -36,7 +36,7 @@ const userApi = baseApi.injectEndpoints({
     // Follow user
     followUser: builder.mutation({
       query: (data) => ({
-        url: "/user/follow",
+        url: "/users/follow",
         method: "POST",
         body: data,
       }),
@@ -50,7 +50,7 @@ const userApi = baseApi.injectEndpoints({
     // Unfollow user
     unfollowUser: builder.mutation({
       query: (data) => ({
-        url: "/user/unfollow",
+        url: "/users/unfollow",
         method: "POST",
         body: data,
       }),
@@ -64,7 +64,7 @@ const userApi = baseApi.injectEndpoints({
     // Request verification
     requestVerification: builder.mutation({
       query: (data) => ({
-        url: "/user/request-verification",
+        url: "/users/request-verification",
         method: "POST",
         body: data,
       }),
