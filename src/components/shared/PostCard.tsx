@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import React from 'react';
+import React,{ useState } from 'react';
 import { ExternalLink,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,Pencil,Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
@@ -14,25 +14,59 @@ import { motion } from 'framer-motion';
 interface PostCardProps {
     post: any; // Replace 'any' with a proper Post interface
     userProfile: any; // Replace 'any' with a proper UserProfile interface
-    expandedPosts: string[];
-    votedPosts: { [key: string]: 'up' | 'down' | null };
-    togglePostExpansion: (postId: string) => void;
-    handleVote: (postId: string,voteType: 'up' | 'down') => void;
-    handleEditPost: (postId: string) => void;
-    handleDeletePost: (postId: string) => void;
+    //expandedPosts: string[];
+    //votedPosts: { [key: string]: 'up' | 'down' | null };
+    //togglePostExpansion: (postId: string) => void;
+    //handleVote: (postId: string,voteType: 'up' | 'down') => void;
+    //handleEditPost: (postId: string) => void;
+    //handleDeletePost: (postId: string) => void;
 }
 
 
 const PostCard: React.FC<PostCardProps> = ({
     post,
     userProfile,
-    expandedPosts,
-    votedPosts,
-    togglePostExpansion,
-    handleVote,
-    handleEditPost,
-    handleDeletePost
+    //expandedPosts,
+    //votedPosts,
+    //togglePostExpansion,
+    //handleVote,
+    //handleEditPost,
+    //handleDeletePost
 }) => {
+
+    console.log(post);
+    console.log(userProfile);
+    //console.log(userProfile?.data?.profilePicture)
+
+    const [expandedPosts,setExpandedPosts] = useState<string[]>([]);
+    const [votedPosts,setVotedPosts] = useState<{ [key: string]: 'up' | 'down' | null }>({});
+
+
+    const togglePostExpansion = (postId: string) => {
+        setExpandedPosts(prev =>
+            prev.includes(postId)
+                ? prev.filter(id => id !== postId)
+                : [...prev,postId]
+        );
+    };
+
+    const handleVote = (postId: string,voteType: 'up' | 'down') => {
+        setVotedPosts(prev => ({
+            ...prev,
+            [postId]: prev[postId] === voteType ? null : voteType
+        }));
+    };
+
+    const handleEditPost = (postId: string) => {
+        console.log(`Editing post ${postId}`);
+    };
+
+    const handleDeletePost = (postId: string) => {
+        console.log(`Deleting post ${postId}`);
+    };
+
+
+
 
     const cardVariants = {
         hidden: { opacity: 0,y: 20 },

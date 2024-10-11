@@ -7,7 +7,6 @@ import { Home,User,Settings,HelpCircle,LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAppDispatch } from '@/redux/hook';
 import { signOut } from '@/redux/features/auth/authSlice';
-import { Button } from '../ui/button';
 
 const navItems = [
     { href: '/dashboard',label: 'Dashboard',icon: Home },
