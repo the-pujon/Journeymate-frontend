@@ -1,5 +1,8 @@
+'use client'
+
 import React from 'react';
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"; // Table components from shadcn
+import { motion } from 'framer-motion';
 
 const PaymentManagement = () => {
     // Example payment data
@@ -25,8 +28,12 @@ const PaymentManagement = () => {
     ];
 
     return (
-        <div className="p-6  min-h-screen">
-            <h1 className="text-2xl font-semibold text-gray-800 mb-6">Payment Management</h1>
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-8 text-center text-primary" > Payment Management</h1 >
             <div className="overflow-x-auto w-full">
                 <Table>
                     <TableHeader>
@@ -60,7 +67,7 @@ const PaymentManagement = () => {
                     </TableBody>
                 </Table>
             </div>
-        </div>
+        </motion.div >
     );
 };
 
