@@ -15,16 +15,21 @@ import Image from 'next/image';
 import Loading from '@/components/shared/Loading';
 import { Input } from "@/components/ui/input";
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
+import { useDebounce } from '@/hooks/useDebounce';
+//import { useDebounce } from 'use-debounce';
 
 const ContentManagement = () => {
     const [searchTerm,setSearchTerm] = useState('');
-    const [category,setCategory] = useState('');  // Changed default value to 'all'
+    const debouncedSearchTerm = useDebounce(searchTerm,300);
+    const [category,setCategory] = useState('all');
     const [sortOrder,setSortOrder] = useState('desc');
-    const { data: posts,isLoading,error,refetch } = useGetPostsQuery({ searchTerm,category,sortOrder });
-    const [deletePost,{ isLoading: isDeleting,error: deleteError }] = useDeletePostMutation();
+    const { data: posts,isLoading,error,refetch } = useGetPostsQuery({
+        searchTerm: debouncedSearchTerm,
+        category,
+        sortOrder
+    });
+    const [deletePost,{ isLoading: isDeleting }] = useDeletePostMutation();
     const [selectedPost,setSelectedPost] = useState(null);
-
-    console.log(error?.data?.stack);
 
     const handleDeletePost = async (id: string) => {
         try {
@@ -38,7 +43,7 @@ const ContentManagement = () => {
 
     useEffect(() => {
         refetch();
-    },[searchTerm,category,sortOrder,refetch]);
+    },[debouncedSearchTerm,category,sortOrder,refetch]);
 
     if (isLoading) {
         return <Loading />;
@@ -74,9 +79,9 @@ const ContentManagement = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Categories</SelectItem>
-                        <SelectItem value="Travel">Travel</SelectItem>
-                        <SelectItem value="Tour">Tour</SelectItem>
-                        <SelectItem value="Fashion">Fashion</SelectItem>
+                        <SelectItem value="Technology">Technology</SelectItem>
+                        <SelectItem value="Science">Science</SelectItem>
+                        <SelectItem value="Health">Health</SelectItem>
                         {/* Add more categories as needed */}
                     </SelectContent>
                 </Select>
