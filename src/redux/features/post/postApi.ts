@@ -5,17 +5,17 @@ const postApi = baseApi.injectEndpoints({
     // Create post
     createPost: builder.mutation({
       query: (data) => ({
-        url: "/post/create",
+        url: "/posts/create",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Posts"],
+      invalidatesTags: ["Posts", "Users"],
     }),
 
     // Get all posts
     getPosts: builder.query({
       query: (params) => ({
-        url: "/post",
+        url: "/posts",
         method: "GET",
         params,
       }),
@@ -25,62 +25,75 @@ const postApi = baseApi.injectEndpoints({
     // Get posts by user ID
     getPostsByUserId: builder.query({
       query: (userId) => ({
-        url: `/post/user/${userId}`,
+        url: `/posts/user/${userId}`,
         method: "GET",
       }),
       providesTags: (result, error, userId) => [
-        { type: "UserPosts", id: userId },
-        "Posts",
+        { type: "Posts", id: userId },
+        "Users",
       ],
     }),
 
     // Get post by ID
     getPostById: builder.query({
       query: (id) => ({
-        url: `/post/${id}`,
+        url: `/posts/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "Post", id }],
+      providesTags: (result, error, id) => [{ type: "Posts", id }],
     }),
 
     // Update post
     updatePost: builder.mutation({
       query: ({ id, data }) => ({
-        url: `/post/${id}`,
+        url: `/posts/${id}`,
         method: "PATCH",
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [
-        { type: "Post", id },
+        { type: "Posts", id },
         "Posts",
+        "Users",
       ],
     }),
 
     // Delete post
     deletePost: builder.mutation({
       query: (id) => ({
-        url: `/post/${id}`,
+        url: `/posts/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }, "Posts"],
+      invalidatesTags: (result, error, id) => [
+        { type: "Posts", id },
+        "Posts",
+        "Users",
+      ],
     }),
 
     // Upvote post
     upvotePost: builder.mutation({
       query: (id) => ({
-        url: `/post/${id}/upvote`,
+        url: `/posts/${id}/upvote`,
         method: "POST",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }, "Posts"],
+      invalidatesTags: (result, error, id) => [
+        { type: "Posts", id },
+        "Posts",
+        "Users",
+      ],
     }),
 
     // Downvote post
     downvotePost: builder.mutation({
       query: (id) => ({
-        url: `/post/${id}/downvote`,
+        url: `/posts/${id}/downvote`,
         method: "POST",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Post", id }, "Posts"],
+      invalidatesTags: (result, error, id) => [
+        { type: "Posts", id },
+        "Posts",
+        "Users",
+      ],
     }),
   }),
 });

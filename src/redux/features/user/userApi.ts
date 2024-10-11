@@ -17,7 +17,7 @@ const userApi = baseApi.injectEndpoints({
         url: `/users/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "User", id }],
+      providesTags: (result, error, id) => [{ type: "Users", id }],
     }),
 
     // Update user profile
@@ -28,8 +28,9 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [
-        { type: "User", id },
+        { type: "Users", id },
         "Users",
+        "Posts",
       ],
     }),
 
@@ -41,9 +42,10 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
       invalidatesTags: (result, error, { userId, followId }) => [
-        { type: "User", id: userId },
-        { type: "User", id: followId },
+        { type: "Users", id: userId },
+        { type: "Users", id: followId },
         "Users",
+        "Posts",
       ],
     }),
 
@@ -55,9 +57,10 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
       invalidatesTags: (result, error, { userId, unfollowId }) => [
-        { type: "User", id: userId },
-        { type: "User", id: unfollowId },
+        { type: "Users", id: userId },
+        { type: "Users", id: unfollowId },
         "Users",
+        "Posts",
       ],
     }),
 
@@ -69,7 +72,8 @@ const userApi = baseApi.injectEndpoints({
         body: data,
       }),
       invalidatesTags: (result, error, { userId }) => [
-        { type: "User", id: userId },
+        { type: "Users", id: userId },
+        "Users",
       ],
     }),
   }),

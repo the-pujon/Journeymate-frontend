@@ -9,6 +9,8 @@ import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from
 import { Badge } from "@/components/ui/badge";
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useDeletePostMutation } from '@/redux/features/post/postApi';
+import { toast } from 'sonner';
 
 // Define the props interface
 interface PostCardProps {
@@ -34,12 +36,9 @@ const PostCard: React.FC<PostCardProps> = ({
     //handleDeletePost
 }) => {
 
-    console.log(post);
-    console.log(userProfile);
-    //console.log(userProfile?.data?.profilePicture)
-
     const [expandedPosts,setExpandedPosts] = useState<string[]>([]);
     const [votedPosts,setVotedPosts] = useState<{ [key: string]: 'up' | 'down' | null }>({});
+    const [deletePost] = useDeletePostMutation();
 
 
     const togglePostExpansion = (postId: string) => {
@@ -61,8 +60,14 @@ const PostCard: React.FC<PostCardProps> = ({
         console.log(`Editing post ${postId}`);
     };
 
-    const handleDeletePost = (postId: string) => {
+    const handleDeletePost = async (postId: string) => {
         console.log(`Deleting post ${postId}`);
+        try {
+            await deletePost(postId);
+            toast.success('Post deleted successfully');
+        } catch (error) {
+            console.error('Error deleting post:',error);
+        }
     };
 
 

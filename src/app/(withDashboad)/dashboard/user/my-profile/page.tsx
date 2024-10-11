@@ -52,7 +52,7 @@ const MyProfile = () => {
                     <TabsTrigger value="followers">Followers</TabsTrigger>
                     <TabsTrigger value="following">Following</TabsTrigger>
                 </TabsList>
-                <AnimatePresence mode="wait">
+                <AnimatePresence mode="popLayout">
                     <TabsContent value="posts" key="posts">
                         {userProfile?.data?.posts?.map(({ post }: { post: any },index: number) => (
                             <motion.div
