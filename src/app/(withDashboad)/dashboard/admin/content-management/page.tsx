@@ -5,7 +5,7 @@ import { useGetPostsQuery,useDeletePostMutation } from '@/redux/features/post/po
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertDialog,AlertDialogAction,AlertDialogCancel,AlertDialogContent,AlertDialogDescription,AlertDialogFooter,AlertDialogHeader,AlertDialogTitle,AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Loader2,Trash2,ThumbsUp,ThumbsDown,MessageSquare,Tag,Calendar,User,Bookmark,ExternalLink,Star,Crown,Image as ImageIcon,Search } from 'lucide-react';
+import { Loader2,Trash2,ThumbsUp,ThumbsDown,MessageSquare,Tag,Calendar,Bookmark,ExternalLink,Crown,Image as ImageIcon,Search } from 'lucide-react';
 import { toast } from 'sonner';
 import { Badge } from "@/components/ui/badge";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
@@ -29,7 +29,7 @@ const ContentManagement = () => {
         sortOrder
     });
     const [deletePost,{ isLoading: isDeleting }] = useDeletePostMutation();
-    const [selectedPost,setSelectedPost] = useState(null);
+    //const [selectedPost,setSelectedPost] = useState(null);
 
     const handleDeletePost = async (id: string) => {
         try {
@@ -38,6 +38,7 @@ const ContentManagement = () => {
             refetch();
         } catch (error) {
             toast.error('Failed to delete post');
+            console.error(error)
         }
     };
 
@@ -45,9 +46,9 @@ const ContentManagement = () => {
         refetch();
     },[debouncedSearchTerm,category,sortOrder,refetch]);
 
-    if (isLoading) {
-        return <Loading />;
-    }
+    //if (isLoading) {
+    //    return <Loading />;
+    //}
 
     if (error) {
         return <div className="text-center text-red-500 mt-8 text-xl">Error loading posts</div>;
@@ -96,7 +97,12 @@ const ContentManagement = () => {
                 </Select>
             </div>
 
+            {
+                isLoading ? <Loading /> : null
+            }
+
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
                 {posts?.data.map((post: any) => (
                     <motion.div
                         key={post._id}
