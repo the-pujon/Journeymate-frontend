@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { CheckCircle,Users } from 'lucide-react';
+import { CheckCircle,Loader2,Users } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useFollowUserMutation,useUnfollowUserMutation } from '@/redux/features/user/userApi';
+import { toast } from 'sonner';
 
 interface UserCardProps {
     user: {
@@ -12,6 +14,7 @@ interface UserCardProps {
         user: {
             name: string;
             email: string;
+            _id: string;
         };
         profilePicture?: string;
         verified?: boolean;
@@ -23,6 +26,25 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
+
+    const [followUser,{ isLoading: followLoading }] = useFollowUserMutation();
+    const [unfollowUser,{ isLoading: unfollowLoading }] = useUnfollowUserMutation();
+
+    const followHandler = async (userId: string,isFollowing: boolean) => {
+        try {
+            if (isFollowing) {
+                await unfollowUser({ unfollowId: userId });
+                toast.success('Unfollowed successfully');
+            } else {
+                await followUser({ followId: userId });
+                toast.success('Followed successfully');
+            }
+        } catch (error) {
+            toast.error('Something went wrong');
+            console.log(error);
+        }
+    };
+
     return (
         <Card className="mb-4">
             <CardHeader>
@@ -47,9 +69,12 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                     </div>
                     <Button
                         className="w-full sm:w-auto"
-                    //onClick={() => onFollowToggle(user._id)}
+                        //onClick={() => onFollowToggle(user._id)}
+                        onClick={() => followHandler(user.user._id,isFollowing)}
+                        disabled={followLoading || unfollowLoading}
                     >
                         {isFollowing ? 'Unfollow' : 'Follow'}
+                        {followLoading || unfollowLoading && <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 ml-2 animate-spin" />}
                     </Button>
                 </div>
             </CardHeader>

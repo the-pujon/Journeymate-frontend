@@ -38,7 +38,6 @@ const PostCard: React.FC<PostCardProps> = ({
 }) => {
 
     const [expandedPosts,setExpandedPosts] = useState<string[]>([]);
-    const [votedPosts,setVotedPosts] = useState<{ [key: string]: 'up' | 'down' | null }>({});
     const [deletePost] = useDeletePostMutation();
     const [upvotePost,{ isLoading: upvoteLoading }] = useUpvotePostMutation();
     const [downvotePost,{ isLoading: downvoteLoading }] = useDownvotePostMutation();
@@ -55,10 +54,6 @@ const PostCard: React.FC<PostCardProps> = ({
     };
 
     const handleVote = async (postId: string,voteType: 'up' | 'down') => {
-        setVotedPosts(prev => ({
-            ...prev,
-            [postId]: prev[postId] === voteType ? null : voteType
-        }));
         if (voteType === 'up') {
             await upvotePost(postId);
         } else {
