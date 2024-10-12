@@ -17,6 +17,7 @@ import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
 interface PostCardProps {
     post: any; // Replace 'any' with a proper Post interface
     userProfile: any; // Replace 'any' with a proper UserProfile interface
+    isMyProfile: boolean;
     //expandedPosts: string[];
     //votedPosts: { [key: string]: 'up' | 'down' | null };
     //togglePostExpansion: (postId: string) => void;

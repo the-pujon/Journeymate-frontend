@@ -1,32 +1,34 @@
 'use client'
 
-import React,{ useState } from 'react';
+import React,{ useEffect } from 'react';
 import { useGetPostsQuery } from '@/redux/features/post/postApi';
 import { useGetUsersQuery,useFollowUserMutation } from '@/redux/features/user/userApi';
-import { useAppSelector } from '@/redux/hook';
+import { useAppSelector,useAppDispatch } from '@/redux/hook';
 import { selectCurrentUser } from '@/redux/features/auth/authSlice';
+import { selectSearchState,clearSearch } from '@/redux/features/search/searchSlice';
 import PostCard from '@/components/shared/PostCard';
 import { Button } from "@/components/ui/button";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
-import { useDebounce } from '@/hooks/useDebounce';
 import Loading from '@/components/shared/Loading';
 
 const NewsFeed = () => {
-  const [searchTerm,setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm,300);
-  const [category,setCategory] = useState('all');
-  const [sortOrder,setSortOrder] = useState('desc');
-
   const currentUser = useAppSelector(selectCurrentUser);
+  const { searchTerm,category,sortOrder } = useAppSelector(selectSearchState);
+  const dispatch = useAppDispatch();
+
   const { data: posts,isLoading: postsLoading } = useGetPostsQuery({
-    searchTerm: debouncedSearchTerm,
+    searchTerm,
     category,
     sortOrder
   });
   const { data: users,isLoading: usersLoading } = useGetUsersQuery({ searchTerm: '' });
   const [followUser] = useFollowUserMutation();
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearSearch());
+    };
+  },[dispatch]);
 
   const handleFollowUser = async (followId: string) => {
     if (currentUser?._id) {
@@ -42,6 +44,7 @@ const NewsFeed = () => {
       <div className="w-1/4 pr-4 sticky top-24 self-start overflow-y-auto max-h-[100vh]">
         <h2 className="text-2xl font-bold mb-4">People to Follow</h2>
         <div className="space-y-4">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
           {users?.data?.map((user: any) => (
             <div key={user._id} className="flex items-center justify-between">
               <div className="flex items-center">
@@ -69,37 +72,11 @@ const NewsFeed = () => {
 
       {/* Main content - Posts */}
       <div className="w-3/4 pl-4">
-        <div className="mb-6 flex items-center space-x-4">
-          <Input
-            placeholder="Search posts..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow"
-          />
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Category" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="technology">Technology</SelectItem>
-              <SelectItem value="science">Science</SelectItem>
-              <SelectItem value="health">Health</SelectItem>
-              {/* Add more categories as needed */}
-            </SelectContent>
-          </Select>
-          <Select value={sortOrder} onValueChange={setSortOrder}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort Order" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="desc">Newest First</SelectItem>
-              <SelectItem value="asc">Oldest First</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
+        {searchTerm && (
+          <p className="mb-4">Showing results for: &quot;{searchTerm}&quot;</p>
+        )}
         <div className="space-y-6">
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any*/}
           {posts?.data?.map((post: any) => (
             <PostCard key={post._id} post={post} userProfile={post.author} isMyProfile={false} />
           ))}

@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./api/baseApi";
 import authReducer from "./features/auth/authSlice";
+import searchReducer from "./features/search/searchSlice";
 import storage from "redux-persist/lib/storage";
 import {
   persistReducer,
@@ -22,6 +23,7 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
   reducer: {
+    search: searchReducer,
     auth: persistedAuthReducer,
     [baseApi.reducerPath]: baseApi.reducer,
   },

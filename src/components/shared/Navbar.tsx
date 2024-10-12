@@ -22,13 +22,22 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setSearchTerm,setCategory,setSortOrder } from '@/redux/features/search/searchSlice';
 
 const Navbar = () => {
     const [isSearchExpanded,setIsSearchExpanded] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isDropdownOpen,setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen,setIsMobileMenuOpen] = useState(false);
     const navRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLDivElement>(null);
+    const [searchInput,setSearchInput] = useState('');
+    const [selectedCategory,setSelectedCategory] = useState('all');
+    const [selectedSortOrder,setSelectedSortOrder] = useState('desc');
+    const dispatch = useDispatch();
+    const router = useRouter();
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -45,6 +54,14 @@ const Navbar = () => {
             document.removeEventListener('mousedown',handleClickOutside);
         };
     },[isDropdownOpen]);
+
+    const handleSearch = () => {
+        dispatch(setSearchTerm(searchInput));
+        dispatch(setCategory(selectedCategory));
+        dispatch(setSortOrder(selectedSortOrder));
+        setIsSearchExpanded(false);
+        router.push('/');
+    };
 
     return (
         <motion.nav
@@ -164,8 +181,10 @@ const Navbar = () => {
                                 type="text"
                                 placeholder="Search adventures..."
                                 className="w-full sm:w-auto flex-grow bg-white/10 border-none text-white placeholder-gray-300 focus:ring-2 focus:ring-white"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
                             />
-                            <Select onOpenChange={(open) => setIsDropdownOpen(open)}>
+                            <Select onValueChange={(value) => setSelectedCategory(value)}>
                                 <SelectTrigger className="w-full sm:w-[120px] bg-white/10 border-none text-white focus:ring-2 focus:ring-white">
                                     <SelectValue placeholder="Category" />
                                 </SelectTrigger>
@@ -176,16 +195,16 @@ const Navbar = () => {
                                     <SelectItem value="food">Food</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <Select onOpenChange={(open) => setIsDropdownOpen(open)}>
+                            <Select onValueChange={(value) => setSelectedSortOrder(value)}>
                                 <SelectTrigger className="w-full sm:w-[120px] bg-white/10 border-none text-white focus:ring-2 focus:ring-white">
                                     <SelectValue placeholder="Sort by" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="recent">Most Recent</SelectItem>
-                                    <SelectItem value="votes">Most Votes</SelectItem>
+                                    <SelectItem value="asc">Most Votes</SelectItem>
+                                    <SelectItem value="desc">Least Votes</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <Button variant="secondary" className="w-full sm:w-auto">Search</Button>
+                            <Button variant="secondary" className="w-full sm:w-auto" onClick={handleSearch}>Search</Button>
                         </motion.div>
                     )}
                 </AnimatePresence>
