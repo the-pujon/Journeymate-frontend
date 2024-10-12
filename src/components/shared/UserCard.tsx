@@ -76,6 +76,7 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                         </div>
                     </div>
                     <Button
+                        size="sm"
                         className="w-full sm:w-auto"
                         //onClick={() => onFollowToggle(user._id)}
                         onClick={() => followHandler(user?.user._id,isFollowing)}
