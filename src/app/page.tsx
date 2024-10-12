@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import React from 'react';
+import React,{ useState,useEffect } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { useGetPostsQuery } from '@/redux/features/post/postApi';
 import { useAppSelector } from '@/redux/hook';
 import { selectSearchState } from '@/redux/features/search/searchSlice';
@@ -11,12 +12,30 @@ import PeopleYouMayKnow from '@/components/shared/PeopleYouMayKnow';
 
 const NewsFeed = () => {
   const { searchTerm,category,sortOrder } = useAppSelector(selectSearchState);
+  const [displayedPosts,setDisplayedPosts] = useState<any[]>([]);
+  const [hasMore,setHasMore] = useState(true);
 
   const { data: posts,isLoading: postsLoading } = useGetPostsQuery({
     searchTerm,
     category,
     sortOrder
   });
+
+  useEffect(() => {
+    if (posts?.data) {
+      setDisplayedPosts(posts.data.slice(0,5));
+      setHasMore(posts.data.length > 5);
+    }
+  },[posts]);
+
+  const fetchMoreData = () => {
+    if (displayedPosts.length >= (posts?.data?.length || 0)) {
+      setHasMore(false);
+      return;
+    }
+    const newPosts = posts?.data.slice(0,displayedPosts.length + 10) || [];
+    setDisplayedPosts(newPosts);
+  };
 
   if (postsLoading) return <Loading />;
 
@@ -35,11 +54,23 @@ const NewsFeed = () => {
         {searchTerm && (
           <p className="mb-4">Showing results for: &quot;{searchTerm}&quot;</p>
         )}
-        <div className="space-y-6">
-          {posts?.data?.map((post: any) => (
-            <PostCard key={post._id} post={post} userProfile={post.author} isMyProfile={false} />
-          ))}
-        </div>
+        <InfiniteScroll
+          dataLength={displayedPosts.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<Loading />}
+          endMessage={
+            <p className="text-center mt-4">
+              <b>End of posts</b>
+            </p>
+          }
+        >
+          <div className="space-y-6">
+            {displayedPosts.map((post: any) => (
+              <PostCard key={post._id} post={post} userProfile={post.author} isMyProfile={false} />
+            ))}
+          </div>
+        </InfiniteScroll>
       </div>
     </div>
   );
