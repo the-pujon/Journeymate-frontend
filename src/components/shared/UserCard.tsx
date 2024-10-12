@@ -49,7 +49,7 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
     return (
         <Card className="">
             <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between space-y-4 xl:space-y-0">
                     <div className="flex items-center space-x-4">
 
                         <Link href={`/profile/${user?.user._id}`}>

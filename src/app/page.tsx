@@ -23,15 +23,15 @@ const NewsFeed = () => {
   return (
     <div className="flex flex-col md:flex-row container mx-auto px-4 py-8">
       {/* Left sidebar - Users list */}
-      <div className="w-full md:w-1/4 md:pr-4 mb-8 md:mb-0">
-        <div className="sticky top-24 overflow-y-auto max-h-[calc(100vh-6rem)]">
+      <div className="w-full md:w-2/5 xl:w-1/3 md:pr-4 mb-8 md:mb-0 hidden lg:block">
+        <div className="sticky top-24 max-h-[calc(100vh-6rem)]">
           <h2 className="text-2xl font-bold mb-4">People you may know</h2>
           <PeopleYouMayKnow />
         </div>
       </div>
 
       {/* Main content - Posts */}
-      <div className="w-full md:w-3/4 md:pl-4">
+      <div className="w-full md:w-3/4 md:pl-4 mx-auto">
         {searchTerm && (
           <p className="mb-4">Showing results for: &quot;{searchTerm}&quot;</p>
         )}

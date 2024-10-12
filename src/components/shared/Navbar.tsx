@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Search,PlusCircle,Globe,Bell,Menu,HelpCircle,Info,X } from "lucide-react"
+import { Search,PlusCircle,Globe,Bell,Menu,HelpCircle,Info,X,Users } from "lucide-react"
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
@@ -22,9 +22,18 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setSearchTerm,setCategory,setSortOrder } from '@/redux/features/search/searchSlice';
+import PeopleYouMayKnow from '@/components/shared/PeopleYouMayKnow';
 
 const Navbar = () => {
     const [isSearchExpanded,setIsSearchExpanded] = useState(false);
@@ -66,7 +75,7 @@ const Navbar = () => {
     return (
         <motion.nav
             ref={navRef}
-            className="bg-gradient-to-b from-primary to-secondary/30 text-white backdrop-blur sticky top-0 z-50 self-start shadow-md"
+            className="bg-gradient-to-b from-primary to-secondary/30 text-white backdrop-blur sticky top-0 z-50 self-start shadow-md w-screen"
             initial={{ opacity: 0,y: -50 }}
             animate={{ opacity: 1,y: 0 }}
             transition={{ duration: 0.5 }}
@@ -77,17 +86,17 @@ const Navbar = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <Link href="/" className="text-2xl sm:text-3xl font-bold flex items-center">
+                        <Link href="/" className="text-xl sm:text-3xl font-bold flex items-center">
                             <Globe className="mr-2 h-6 w-6 sm:h-8 sm:w-8" />
                             JourneyMate
                         </Link>
                     </motion.div>
-                    <div className="flex items-center space-x-4">
-                        <div className="hidden sm:flex items-center space-x-4">
+                    <div className="flex items-center space-x-0 sm:space-x-4">
+                        <div className="hidden md:flex items-center space-x-4">
                             <AnimatePresence>
                                 {!isSearchExpanded && (
                                     <motion.div
-                                        className="flex items-center space-x-4"
+                                        className="flex items-center gap-2"
                                         initial={{ opacity: 0,x: 20 }}
                                         animate={{ opacity: 1,x: 0 }}
                                         exit={{ opacity: 0,x: 20 }}
@@ -153,7 +162,29 @@ const Navbar = () => {
                                 <Search className="h-5 w-5" />
                             </Button>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="sm:hidden">
+                        <Sheet>
+                            <SheetTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="text-white hover:bg-white/20 xl:hidden"
+                                >
+                                    <Users className="h-5 w-5" />
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent className='w-full md:w-2/3'>
+                                <SheetHeader>
+                                    <SheetTitle>People you may know</SheetTitle>
+                                    <SheetDescription>
+                                        Discover new connections on JourneyMate.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className="mt-4">
+                                    <PeopleYouMayKnow />
+                                </div>
+                            </SheetContent>
+                        </Sheet>
+                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="md:hidden">
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -211,7 +242,7 @@ const Navbar = () => {
                 <AnimatePresence>
                     {isMobileMenuOpen && (
                         <motion.div
-                            className="sm:hidden mt-4 flex flex-col space-y-2"
+                            className="md:hidden mt-4 flex flex-col space-y-2"
                             initial={{ opacity: 0,height: 0 }}
                             animate={{ opacity: 1,height: 'auto' }}
                             exit={{ opacity: 0,height: 0 }}
