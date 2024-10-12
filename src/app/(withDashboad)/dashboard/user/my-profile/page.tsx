@@ -69,6 +69,7 @@ const MyProfile = () => {
                                     //key={post._id}
                                     post={post}
                                     userProfile={userProfile?.data}
+                                    isMyProfile={true}
                                 />
                             </motion.div>
                         ))}

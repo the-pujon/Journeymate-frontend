@@ -13,17 +13,11 @@ import { useDeletePostMutation,useDownvotePostMutation,useUpvotePostMutation } f
 import { toast } from 'sonner';
 import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
 
-// Define the props interface
+
 interface PostCardProps {
-    post: any; // Replace 'any' with a proper Post interface
-    userProfile: any; // Replace 'any' with a proper UserProfile interface
+    post: any;
+    userProfile: any;
     isMyProfile: boolean;
-    //expandedPosts: string[];
-    //votedPosts: { [key: string]: 'up' | 'down' | null };
-    //togglePostExpansion: (postId: string) => void;
-    //handleVote: (postId: string,voteType: 'up' | 'down') => void;
-    //handleEditPost: (postId: string) => void;
-    //handleDeletePost: (postId: string) => void;
 }
 
 
@@ -31,15 +25,8 @@ const PostCard: React.FC<PostCardProps> = ({
     post,
     userProfile,
     isMyProfile,
-    //expandedPosts,
-    //votedPosts,
-    //togglePostExpansion,
-    //handleVote,
-    //handleEditPost,
-    //handleDeletePost
 }) => {
 
-    console.log("userProfile",userProfile)
 
     const [expandedPosts,setExpandedPosts] = useState<string[]>([]);
     const [deletePost] = useDeletePostMutation();
@@ -47,7 +34,7 @@ const PostCard: React.FC<PostCardProps> = ({
     const [downvotePost,{ isLoading: downvoteLoading }] = useDownvotePostMutation();
     const { data: voteData } = useGetVoteQuery(post?._id);
 
-    console.log(voteData)
+
 
     const togglePostExpansion = (postId: string) => {
         setExpandedPosts(prev =>
