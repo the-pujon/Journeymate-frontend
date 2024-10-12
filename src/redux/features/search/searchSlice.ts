@@ -10,7 +10,7 @@ interface SearchState {
 const initialState: SearchState = {
   searchTerm: "",
   category: "all",
-  sortOrder: "desc",
+  sortOrder: "",
 };
 
 const searchSlice = createSlice({
@@ -29,7 +29,7 @@ const searchSlice = createSlice({
     clearSearch: (state) => {
       state.searchTerm = "";
       state.category = "all";
-      state.sortOrder = "desc";
+      state.sortOrder = "";
     },
   },
 });

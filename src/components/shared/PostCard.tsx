@@ -12,6 +12,8 @@ import { motion } from 'framer-motion';
 import { useDeletePostMutation,useDownvotePostMutation,useUpvotePostMutation } from '@/redux/features/post/postApi';
 import { toast } from 'sonner';
 import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
+import { useAppSelector } from '@/redux/hook';
+import { selectCurrentUser } from '@/redux/features/auth/authSlice';
 
 
 interface PostCardProps {
@@ -28,11 +30,14 @@ const PostCard: React.FC<PostCardProps> = ({
 }) => {
 
 
+
     const [expandedPosts,setExpandedPosts] = useState<string[]>([]);
     const [deletePost] = useDeletePostMutation();
     const [upvotePost,{ isLoading: upvoteLoading }] = useUpvotePostMutation();
     const [downvotePost,{ isLoading: downvoteLoading }] = useDownvotePostMutation();
     const { data: voteData } = useGetVoteQuery(post?._id);
+    const currentUser = useAppSelector(selectCurrentUser);
+    const currentUserId = currentUser?._id;
 
 
 
@@ -155,8 +160,8 @@ const PostCard: React.FC<PostCardProps> = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                disabled={voteData?.success && voteData?.data?.user === userProfile?.user._id && voteData?.data?.voteType === 'upvote'}
-                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === userProfile?.user._id ? 'text-green-500' : ''}`}
+                                disabled={voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'upvote'}
+                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'upvote' ? 'text-green-500' : ''}`}
                                 onClick={() => handleVote(post?._id,'up')}
                             >
                                 {upvoteLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <ThumbsUp className="h-5 w-5" />}
@@ -165,8 +170,8 @@ const PostCard: React.FC<PostCardProps> = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                disabled={voteData?.success && voteData?.data?.user === userProfile?.user._id && voteData?.data?.voteType === 'downvote'}
-                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === userProfile?.user._id ? 'text-red-500' : ''}`}
+                                disabled={voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'downvote'}
+                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'downvote' ? 'text-red-500' : ''}`}
                                 onClick={() => handleVote(post?._id,'down')}
                             >
                                 {downvoteLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <ThumbsDown className="h-5 w-5" />}

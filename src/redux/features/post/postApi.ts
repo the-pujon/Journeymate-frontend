@@ -14,7 +14,7 @@ const postApi = baseApi.injectEndpoints({
 
     // Get all posts
     getPosts: builder.query({
-      query: ({ searchTerm = "", category = "all", sortOrder = "desc" }) => ({
+      query: ({ searchTerm = "", category = "all", sortOrder = "" }) => ({
         url: "/posts",
         params: {
           searchTerm,
