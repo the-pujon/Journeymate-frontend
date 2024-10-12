@@ -35,7 +35,7 @@ const AboutPage = () => {
                     variants={fadeIn}
                 >
                     <p className="text-xl mb-6 text-gray-700 leading-relaxed">
-                        Welcome to Travel Tips & Destination Guides, your dynamic community platform for travel enthusiasts! We're more than just a website – we're a thriving ecosystem where travelers connect, share, and inspire each other.
+                        Welcome to Travel Tips & Destination Guides, your dynamic community platform for travel enthusiasts! We&apos;re more than just a website – we&apos;re a thriving ecosystem where travelers connect, share, and inspire each other.
                     </p>
                     <div className="flex justify-center">
                         <Image src="https://images.unsplash.com/photo-1501785888041-af3ef285b470" alt="Travel landscape" width={1000} height={600} className="rounded-lg shadow-md hover:shadow-xl transition duration-300" />
@@ -110,7 +110,7 @@ const AboutPage = () => {
                     >
                         <h2 className="text-3xl font-semibold mb-6 text-primary">Our Mission</h2>
                         <p className="text-lg mb-4">
-                            At Travel Tips & Destination Guides, we're on a mission to make travel more accessible, enjoyable, and enriching for everyone. We believe that by sharing our experiences and knowledge, we can help each other discover the world in new and exciting ways.
+                            At Travel Tips & Destination Guides, we&apos;re on a mission to make travel more accessible, enjoyable, and enriching for everyone. We believe that by sharing our experiences and knowledge, we can help each other discover the world in new and exciting ways.
                         </p>
                         <Image src="https://images.unsplash.com/photo-1488646953014-85cb44e25828" alt="Our mission" width={500} height={300} className="rounded-lg shadow-md mx-auto" />
                     </motion.div>
@@ -151,7 +151,7 @@ const AboutPage = () => {
                     animate={{ opacity: [0.5,1,0.5] }}
                     transition={{ duration: 2,repeat: Infinity }}
                 >
-                    Join our community today and let's explore the world together, one post at a time!
+                    Join our community today and let&apos;s explore the world together, one post at a time!
                 </motion.p>
             </motion.div>
         </div>
