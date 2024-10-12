@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Search,PlusCircle,Globe,Bell,Menu } from "lucide-react"
+import { Search,PlusCircle,Globe,Bell,Menu,HelpCircle,Info,X } from "lucide-react"
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
@@ -49,7 +49,7 @@ const Navbar = () => {
     return (
         <motion.nav
             ref={navRef}
-            className="bg-gradient-to-b from-primary to-secondary/60 text-white shadow-lg"
+            className="bg-gradient-to-b from-primary to-secondary/30 text-white backdrop-blur sticky top-0 z-50 self-start shadow-md"
             initial={{ opacity: 0,y: -50 }}
             animate={{ opacity: 1,y: 0 }}
             transition={{ duration: 0.5 }}
@@ -86,6 +86,22 @@ const Navbar = () => {
                                                 <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
                                                     <PlusCircle className="mr-2 h-4 w-4" />
                                                     Create
+                                                </Button>
+                                            </Link>
+                                        </motion.div>
+                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                            <Link href="/about" passHref>
+                                                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                                                    <Info className="mr-2 h-4 w-4" />
+                                                    About
+                                                </Button>
+                                            </Link>
+                                        </motion.div>
+                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                            <Link href="/support" passHref>
+                                                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                                                    <HelpCircle className="mr-2 h-4 w-4" />
+                                                    Support
                                                 </Button>
                                             </Link>
                                         </motion.div>
@@ -127,7 +143,9 @@ const Navbar = () => {
                                 className="text-white hover:bg-white/20"
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             >
-                                <Menu className="h-5 w-5" />
+                                {
+                                    isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />
+                                }
                             </Button>
                         </motion.div>
                     </div>
@@ -180,23 +198,50 @@ const Navbar = () => {
                             exit={{ opacity: 0,height: 0 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <Button variant="ghost" className="justify-start">
+                            <Button variant="ghost" className="justify-start w-full">
                                 <Bell className="mr-2 h-5 w-5" />
                                 Notifications
                             </Button>
                             <Link href="/create-post" passHref>
-                                <Button variant="ghost" className="justify-start">
+                                <Button variant="ghost" className="justify-start w-full">
                                     <PlusCircle className="mr-2 h-5 w-5" />
                                     Create Post
                                 </Button>
                             </Link>
-                            <Button variant="ghost" className="justify-start">
-                                <Avatar className="mr-2 h-5 w-5">
-                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                    <AvatarFallback>CN</AvatarFallback>
-                                </Avatar>
-                                Profile
-                            </Button>
+                            <Link href="/about" passHref>
+                                <Button variant="ghost" className="justify-start w-full">
+                                    <Info className="mr-2 h-5 w-5" />
+                                    About
+                                </Button>
+                            </Link>
+                            <Link href="/support" passHref>
+                                <Button variant="ghost" className="justify-start w-full">
+                                    <HelpCircle className="mr-2 h-5 w-5" />
+                                    Support
+                                </Button>
+                            </Link>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="justify-start w-full">
+                                        <Avatar className="mr-2 h-5 w-5">
+                                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>
+                                        Profile
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem>
+                                        <Link href="/profile" className="flex w-full">Profile</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link href="/dashboard" className="flex w-full">Dashboard</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </motion.div>
                     )}
                 </AnimatePresence>

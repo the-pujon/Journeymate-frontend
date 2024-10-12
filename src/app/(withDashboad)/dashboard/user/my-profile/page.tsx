@@ -68,7 +68,7 @@ const MyProfile = () => {
                                 <PostCard
                                     //key={post._id}
                                     post={post}
-                                    userProfile={userProfile}
+                                    userProfile={userProfile?.data}
                                 />
                             </motion.div>
                         ))}

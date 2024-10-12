@@ -1,101 +1,112 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import React,{ useState } from 'react';
+import { useGetPostsQuery } from '@/redux/features/post/postApi';
+import { useGetUsersQuery,useFollowUserMutation } from '@/redux/features/user/userApi';
+import { useAppSelector } from '@/redux/hook';
+import { selectCurrentUser } from '@/redux/features/auth/authSlice';
+import PostCard from '@/components/shared/PostCard';
+import { Button } from "@/components/ui/button";
+import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
+import { useDebounce } from '@/hooks/useDebounce';
+import Loading from '@/components/shared/Loading';
+
+const NewsFeed = () => {
+  const [searchTerm,setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm,300);
+  const [category,setCategory] = useState('all');
+  const [sortOrder,setSortOrder] = useState('desc');
+
+  const currentUser = useAppSelector(selectCurrentUser);
+  const { data: posts,isLoading: postsLoading } = useGetPostsQuery({
+    searchTerm: debouncedSearchTerm,
+    category,
+    sortOrder
+  });
+  const { data: users,isLoading: usersLoading } = useGetUsersQuery({ searchTerm: '' });
+  const [followUser] = useFollowUserMutation();
+
+  const handleFollowUser = async (followId: string) => {
+    if (currentUser?._id) {
+      await followUser({ userId: currentUser._id,followId });
+    }
+  };
+
+  if (postsLoading || usersLoading) return <Loading />;
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="flex container mx-auto px-4 py-8">
+      {/* Left sidebar - Users list */}
+      <div className="w-1/4 pr-4 sticky top-24 self-start overflow-y-auto max-h-[100vh]">
+        <h2 className="text-2xl font-bold mb-4">People to Follow</h2>
+        <div className="space-y-4">
+          {users?.data?.map((user: any) => (
+            <div key={user._id} className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar className="h-10 w-10 mr-3">
+                  <AvatarImage src={user.profilePicture} />
+                  <AvatarFallback>{user.user?.name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold">{user.user?.name}</p>
+                  <p className="text-sm text-gray-500">{user.user?.email}</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleFollowUser(user._id)}
+              >
+                Follow
+              </Button>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+      </div>
+
+      {/* Main content - Posts */}
+      <div className="w-3/4 pl-4">
+        <div className="mb-6 flex items-center space-x-4">
+          <Input
+            placeholder="Search posts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-grow"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <Select value={category} onValueChange={setCategory}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              <SelectItem value="technology">Technology</SelectItem>
+              <SelectItem value="science">Science</SelectItem>
+              <SelectItem value="health">Health</SelectItem>
+              {/* Add more categories as needed */}
+            </SelectContent>
+          </Select>
+          <Select value={sortOrder} onValueChange={setSortOrder}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort Order" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="desc">Newest First</SelectItem>
+              <SelectItem value="asc">Oldest First</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-6">
+          {posts?.data?.map((post: any) => (
+            <PostCard key={post._id} post={post} userProfile={post.author} isMyProfile={false} />
+          ))}
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default NewsFeed;

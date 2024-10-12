@@ -29,6 +29,7 @@ interface PostCardProps {
 const PostCard: React.FC<PostCardProps> = ({
     post,
     userProfile,
+    isMyProfile,
     //expandedPosts,
     //votedPosts,
     //togglePostExpansion,
@@ -36,6 +37,8 @@ const PostCard: React.FC<PostCardProps> = ({
     //handleEditPost,
     //handleDeletePost
 }) => {
+
+    console.log("userProfile",userProfile)
 
     const [expandedPosts,setExpandedPosts] = useState<string[]>([]);
     const [deletePost] = useDeletePostMutation();
@@ -101,11 +104,11 @@ const PostCard: React.FC<PostCardProps> = ({
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                         <div className="flex items-center space-x-4 mb-4 sm:mb-0">
                             <Avatar>
-                                <AvatarImage src={userProfile?.data?.profilePicture} alt={userProfile?.data?.user.name} />
-                                <AvatarFallback>{userProfile?.data?.user.name.charAt(0)}</AvatarFallback>
+                                <AvatarImage src={userProfile?.profilePicture} alt={userProfile?.user.name} />
+                                <AvatarFallback>{userProfile?.user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
-                                <CardTitle className="text-lg">{userProfile?.data?.user.name}</CardTitle>
+                                <CardTitle className="text-lg">{userProfile?.user.name}</CardTitle>
                                 <CardDescription>{new Date(post?.createdAt).toLocaleDateString()}</CardDescription>
                             </div>
                         </div>
@@ -116,12 +119,16 @@ const PostCard: React.FC<PostCardProps> = ({
                                     Premium
                                 </Badge>
                             )}
-                            <Button variant="ghost" size="icon" onClick={() => handleEditPost(post?._id)}>
-                                <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post?._id)}>
-                                <Trash2 className="h-4 w-4" />
-                            </Button>
+                            {
+                                isMyProfile && <>
+                                    <Button variant="ghost" size="icon" onClick={() => handleEditPost(post?._id)}>
+                                        <Pencil className="h-4 w-4" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post?._id)}>
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                </>
+                            }
                         </div>
                     </div>
                 </CardHeader>
@@ -160,8 +167,8 @@ const PostCard: React.FC<PostCardProps> = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                disabled={voteData?.success && voteData?.data?.user === userProfile?.data?.user._id && voteData?.data?.voteType === 'upvote'}
-                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === userProfile?.data?.user._id ? 'text-green-500' : ''}`}
+                                disabled={voteData?.success && voteData?.data?.user === userProfile?.user._id && voteData?.data?.voteType === 'upvote'}
+                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === userProfile?.user._id ? 'text-green-500' : ''}`}
                                 onClick={() => handleVote(post?._id,'up')}
                             >
                                 {upvoteLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <ThumbsUp className="h-5 w-5" />}
@@ -170,8 +177,8 @@ const PostCard: React.FC<PostCardProps> = ({
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                disabled={voteData?.success && voteData?.data?.user === userProfile?.data?.user._id && voteData?.data?.voteType === 'downvote'}
-                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === userProfile?.data?.user._id ? 'text-red-500' : ''}`}
+                                disabled={voteData?.success && voteData?.data?.user === userProfile?.user._id && voteData?.data?.voteType === 'downvote'}
+                                className={`disabled:opacity-100 disabled:cursor-not-allowed flex items-center space-x-2 ${voteData?.success && voteData?.data?.user === userProfile?.user._id ? 'text-red-500' : ''}`}
                                 onClick={() => handleVote(post?._id,'down')}
                             >
                                 {downvoteLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <ThumbsDown className="h-5 w-5" />}

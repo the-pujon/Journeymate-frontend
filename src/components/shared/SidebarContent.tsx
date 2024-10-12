@@ -34,7 +34,7 @@ const SidebarContent = ({ onClose }: { onClose?: () => void }) => {
         <div className="h-full flex flex-col justify-between min-h-[95vh]">
             <div>
                 <div className="flex items-center justify-center mb-8">
-                    <h1 className="text-2xl font-bold text-primary mt-5 sm:mt-0 ">JourneyMate</h1>
+                    <Link href="/" className="text-2xl font-bold text-primary mt-5 sm:mt-0 ">JourneyMate</Link>
                 </div>
                 <nav className="flex-1">
                     {navItems.map((item) => (
