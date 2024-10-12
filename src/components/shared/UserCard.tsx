@@ -7,6 +7,7 @@ import { Card,CardContent,CardDescription,CardHeader,CardTitle } from "@/compone
 import { Badge } from "@/components/ui/badge";
 import { useFollowUserMutation,useUnfollowUserMutation } from '@/redux/features/user/userApi';
 import { toast } from 'sonner';
+import Link from 'next/link';
 
 interface UserCardProps {
     user: {
@@ -36,7 +37,7 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                 await unfollowUser({ unfollowId: userId });
                 toast.success('Unfollowed successfully');
             } else {
-                await followUser({ followId: userId });
+                await followUser({ followingId: userId });
                 toast.success('Followed successfully');
             }
         } catch (error) {
@@ -46,17 +47,24 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
     };
 
     return (
-        <Card className="mb-4">
+        <Card className="">
             <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                     <div className="flex items-center space-x-4">
-                        <Avatar>
-                            <AvatarImage src={user?.profilePicture} alt={user?.user?.name} />
-                            <AvatarFallback>{user?.user?.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
+
+                        <Link href={`/profile/${user?.user._id}`}>
+                            <Avatar>
+                                <AvatarImage src={user?.profilePicture} alt={user?.user?.name} />
+                                <AvatarFallback>{user?.user?.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                        </Link>
                         <div>
                             <div className="flex items-center space-x-2">
-                                <CardTitle>{user?.user.name}</CardTitle>
+                                <CardTitle>
+                                    <Link href={`/profile/${user?.user._id}`}>
+                                        {user?.user.name}
+                                    </Link>
+                                </CardTitle>
                                 {user?.verified && (
                                     <Badge variant="secondary">
                                         <CheckCircle className="w-3 h-3 mr-1" />
@@ -74,7 +82,10 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                         disabled={followLoading || unfollowLoading}
                     >
                         {isFollowing ? 'Unfollow' : 'Follow'}
-                        {followLoading || unfollowLoading && <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 ml-2 animate-spin" />}
+                        {unfollowLoading && <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 ml-2 animate-spin" />}
+                        {
+                            followLoading && <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 ml-2 animate-spin" />
+                        }
                     </Button>
                 </div>
             </CardHeader>

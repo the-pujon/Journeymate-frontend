@@ -100,7 +100,7 @@ const NewsFeed = () => {
           {usersWithoutCurrentUser?.length >= 5 && (
             <p className="text-center text-gray-500">Only showing 5 users</p>
           )}
-          {usersWithoutCurrentUser?.length >= 5 && usersWithoutCurrentUser?.length !== 0 && (
+          {usersWithoutCurrentUser?.length > 5 && usersWithoutCurrentUser?.length !== 0 && (
             <Button variant="secondary" className="w-full" asChild>
               <Link href="/people">
                 <p className="text-center">View all</p>
