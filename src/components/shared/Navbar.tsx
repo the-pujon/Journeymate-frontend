@@ -12,7 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Search,PlusCircle,Globe,Bell } from "lucide-react"
+import { Search,PlusCircle,Globe,Bell,Menu } from "lucide-react"
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
@@ -26,6 +26,7 @@ import {
 const Navbar = () => {
     const [isSearchExpanded,setIsSearchExpanded] = useState(false);
     const [isDropdownOpen,setIsDropdownOpen] = useState(false);
+    const [isMobileMenuOpen,setIsMobileMenuOpen] = useState(false);
     const navRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLDivElement>(null);
 
@@ -35,6 +36,7 @@ const Navbar = () => {
                 navRef.current && !navRef.current.contains(event.target as Node) &&
                 searchRef.current && !searchRef.current.contains(event.target as Node)) {
                 setIsSearchExpanded(false);
+                setIsMobileMenuOpen(false);
             }
         };
 
@@ -52,60 +54,62 @@ const Navbar = () => {
             animate={{ opacity: 1,y: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="container mx-auto py-4">
+            <div className="container mx-auto py-4 px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center">
                     <motion.div
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        <Link href="/" className="text-3xl font-bold flex items-center">
-                            <Globe className="mr-2 h-8 w-8" />
+                        <Link href="/" className="text-2xl sm:text-3xl font-bold flex items-center">
+                            <Globe className="mr-2 h-6 w-6 sm:h-8 sm:w-8" />
                             JourneyMate
                         </Link>
                     </motion.div>
                     <div className="flex items-center space-x-4">
-                        <AnimatePresence>
-                            {!isSearchExpanded && (
-                                <motion.div
-                                    className="flex items-center space-x-4"
-                                    initial={{ opacity: 0,x: 20 }}
-                                    animate={{ opacity: 1,x: 0 }}
-                                    exit={{ opacity: 0,x: 20 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
-                                            <Bell className="h-5 w-5" />
-                                        </Button>
-                                    </motion.div>
-                                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                                        <Link href="/create-post" passHref>
-                                            <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
-                                                <PlusCircle className="mr-2 h-4 w-4" />
-                                                Create
+                        <div className="hidden sm:flex items-center space-x-4">
+                            <AnimatePresence>
+                                {!isSearchExpanded && (
+                                    <motion.div
+                                        className="flex items-center space-x-4"
+                                        initial={{ opacity: 0,x: 20 }}
+                                        animate={{ opacity: 1,x: 0 }}
+                                        exit={{ opacity: 0,x: 20 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                                                <Bell className="h-5 w-5" />
                                             </Button>
-                                        </Link>
+                                        </motion.div>
+                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                            <Link href="/create-post" passHref>
+                                                <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
+                                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                                    Create
+                                                </Button>
+                                            </Link>
+                                        </motion.div>
+                                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Avatar className="cursor-pointer">
+                                                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                                        <AvatarFallback>CN</AvatarFallback>
+                                                    </Avatar>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem>Profile</DropdownMenuItem>
+                                                    <DropdownMenuItem>Settings</DropdownMenuItem>
+                                                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </motion.div>
                                     </motion.div>
-                                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Avatar className="cursor-pointer">
-                                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                                                    <AvatarFallback>CN</AvatarFallback>
-                                                </Avatar>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem>Profile</DropdownMenuItem>
-                                                <DropdownMenuItem>Settings</DropdownMenuItem>
-                                                <DropdownMenuItem>Logout</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </motion.div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                                )}
+                            </AnimatePresence>
+                        </div>
                         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                             <Button
                                 variant="ghost"
@@ -116,13 +120,23 @@ const Navbar = () => {
                                 <Search className="h-5 w-5" />
                             </Button>
                         </motion.div>
+                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="sm:hidden">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-white hover:bg-white/20"
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            >
+                                <Menu className="h-5 w-5" />
+                            </Button>
+                        </motion.div>
                     </div>
                 </div>
                 <AnimatePresence>
                     {isSearchExpanded && (
                         <motion.div
                             ref={searchRef}
-                            className="mt-4 flex items-center space-x-2"
+                            className="mt-4 flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2"
                             initial={{ opacity: 0,height: 0 }}
                             animate={{ opacity: 1,height: 'auto' }}
                             exit={{ opacity: 0,height: 0 }}
@@ -131,10 +145,10 @@ const Navbar = () => {
                             <Input
                                 type="text"
                                 placeholder="Search adventures..."
-                                className="flex-grow bg-white/10 border-none text-white placeholder-gray-300 focus:ring-2 focus:ring-white"
+                                className="w-full sm:w-auto flex-grow bg-white/10 border-none text-white placeholder-gray-300 focus:ring-2 focus:ring-white"
                             />
                             <Select onOpenChange={(open) => setIsDropdownOpen(open)}>
-                                <SelectTrigger className="w-[120px] bg-white/10 border-none text-white focus:ring-2 focus:ring-white">
+                                <SelectTrigger className="w-full sm:w-[120px] bg-white/10 border-none text-white focus:ring-2 focus:ring-white">
                                     <SelectValue placeholder="Category" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -145,7 +159,7 @@ const Navbar = () => {
                                 </SelectContent>
                             </Select>
                             <Select onOpenChange={(open) => setIsDropdownOpen(open)}>
-                                <SelectTrigger className="w-[120px] bg-white/10 border-none text-white focus:ring-2 focus:ring-white">
+                                <SelectTrigger className="w-full sm:w-[120px] bg-white/10 border-none text-white focus:ring-2 focus:ring-white">
                                     <SelectValue placeholder="Sort by" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -153,7 +167,36 @@ const Navbar = () => {
                                     <SelectItem value="votes">Most Votes</SelectItem>
                                 </SelectContent>
                             </Select>
-                            <Button variant="secondary">Search</Button>
+                            <Button variant="secondary" className="w-full sm:w-auto">Search</Button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.div
+                            className="sm:hidden mt-4 flex flex-col space-y-2"
+                            initial={{ opacity: 0,height: 0 }}
+                            animate={{ opacity: 1,height: 'auto' }}
+                            exit={{ opacity: 0,height: 0 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <Button variant="ghost" className="justify-start">
+                                <Bell className="mr-2 h-5 w-5" />
+                                Notifications
+                            </Button>
+                            <Link href="/create-post" passHref>
+                                <Button variant="ghost" className="justify-start">
+                                    <PlusCircle className="mr-2 h-5 w-5" />
+                                    Create Post
+                                </Button>
+                            </Link>
+                            <Button variant="ghost" className="justify-start">
+                                <Avatar className="mr-2 h-5 w-5">
+                                    <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                                Profile
+                            </Button>
                         </motion.div>
                     )}
                 </AnimatePresence>
