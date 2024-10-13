@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
 import { useAppSelector } from '@/redux/hook';
 import { selectCurrentUser } from '@/redux/features/auth/authSlice';
+import EditPostModal from './EditPostModal';
 
 
 interface PostCardProps {
@@ -114,9 +115,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             )}
                             {
                                 isMyProfile && <>
-                                    <Button variant="ghost" size="icon" onClick={() => handleEditPost(post?._id)}>
-                                        <Pencil className="h-4 w-4" />
-                                    </Button>
+                                    <EditPostModal post={post} />
                                     <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post?._id)}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>

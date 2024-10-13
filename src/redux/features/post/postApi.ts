@@ -52,11 +52,14 @@ const postApi = baseApi.injectEndpoints({
 
     // Update post
     updatePost: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `/posts/${id}`,
-        method: "PATCH",
-        body: data,
-      }),
+      query: ({ id, data }) => {
+        console.log("data", data);
+        return {
+          url: `/posts/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
       invalidatesTags: (result, error, { id }) => [
         { type: "Posts", id },
         "Posts",
