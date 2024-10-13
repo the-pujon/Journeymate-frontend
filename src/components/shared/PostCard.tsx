@@ -182,7 +182,7 @@ const PostCard: React.FC<PostCardProps> = ({
                                 <span>{post?.totalComments}</span>
                             </Button>
                         </div>
-                        <Link href={`/dashboard/posts/${post?._id}`} className="w-full sm:w-auto">
+                        <Link href={`/posts/${post?._id}`} className="w-full sm:w-auto">
                             <Button variant="outline" size="sm" className="w-full">
                                 <ExternalLink className="h-4 w-4 mr-2" /> View Full Post
                             </Button>

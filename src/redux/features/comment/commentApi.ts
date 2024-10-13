@@ -5,7 +5,7 @@ const commentApi = baseApi.injectEndpoints({
     // Create comment
     createComment: builder.mutation({
       query: (data) => ({
-        url: "/comment/create",
+        url: "/comments/create",
         method: "POST",
         body: data,
       }),
@@ -17,7 +17,7 @@ const commentApi = baseApi.injectEndpoints({
     // Get comments by post ID
     getCommentsByPostId: builder.query({
       query: (postId) => ({
-        url: `/comment/post/${postId}`,
+        url: `/comments/post/${postId}`,
         method: "GET",
       }),
       providesTags: (result, error, postId) => [
@@ -28,7 +28,7 @@ const commentApi = baseApi.injectEndpoints({
     // Edit comment
     editComment: builder.mutation({
       query: ({ commentId, data }) => ({
-        url: `/comment/${commentId}`,
+        url: `/comments/${commentId}`,
         method: "PATCH",
         body: data,
       }),
@@ -41,8 +41,21 @@ const commentApi = baseApi.injectEndpoints({
     // Delete comment
     deleteComment: builder.mutation({
       query: ({ commentId }) => ({
-        url: `/comment/${commentId}`,
+        url: `/comments/${commentId}`,
         method: "DELETE",
+      }),
+      invalidatesTags: (result, error, { commentId, postId }) => [
+        { type: "Comment", id: commentId },
+        { type: "Comments", id: postId },
+      ],
+    }),
+
+    // Vote comment
+    voteComment: builder.mutation({
+      query: ({ commentId, voteType }) => ({
+        url: `/comments/${commentId}/vote`,
+        method: "POST",
+        body: { voteType },
       }),
       invalidatesTags: (result, error, { commentId, postId }) => [
         { type: "Comment", id: commentId },
@@ -57,4 +70,5 @@ export const {
   useGetCommentsByPostIdQuery,
   useEditCommentMutation,
   useDeleteCommentMutation,
+  useVoteCommentMutation,
 } = commentApi;
