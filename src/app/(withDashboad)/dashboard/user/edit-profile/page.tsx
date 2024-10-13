@@ -81,11 +81,11 @@ const EditProfile = () => {
             let imageUrl = userProfile?.data.profilePicture;
 
             if (data.profilePicture && data.profilePicture.length > 0) {
-                console.log("here")
+
                 imageUrl = await uploadImageToImgBB(data.profilePicture[0]);
             }
 
-            console.log("imageUrl",imageUrl)
+
 
             const updateData = {
                 name: data.name,
@@ -93,7 +93,7 @@ const EditProfile = () => {
                 profilePicture: imageUrl,
             };
 
-            console.log(updateData)
+
 
             await updateUserProfile({ id: userId,data: updateData }).unwrap();
             toast.success('Profile updated successfully');

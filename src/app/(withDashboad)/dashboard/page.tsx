@@ -4,7 +4,7 @@
 import React from 'react';
 import { ResponsiveContainer,PieChart,Pie,Cell,Tooltip,AreaChart,Area,XAxis,YAxis,CartesianGrid,BarChart,Bar,Legend } from 'recharts';
 import { useGetUsersQuery } from '@/redux/features/user/userApi';
-import { useGetPostsQuery } from '@/redux/features/post/postApi';
+import { useGetAllPostsQuery } from '@/redux/features/post/postApi';
 import { useGetPaymentsQuery } from '@/redux/features/payment/paymentApi';
 import { withAuth } from '@/components/auth/withAuth';
 
@@ -12,8 +12,10 @@ const COLORS = ['#9CC9C6','#115E59','#FFBB28','#FF8042','#8884d8','#82ca9d'];
 
 const DashboardOverview = () => {
     const { data: usersData } = useGetUsersQuery({ searchTerm: "" });
-    const { data: postsData } = useGetPostsQuery({});
+    const { data: postsData } = useGetAllPostsQuery({});
     const { data: paymentsData } = useGetPaymentsQuery({});
+
+    console.log(postsData)
 
     const users = usersData?.data || [];
     const posts = postsData?.data || [];

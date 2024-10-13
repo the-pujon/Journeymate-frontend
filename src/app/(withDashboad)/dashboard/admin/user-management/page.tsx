@@ -14,7 +14,6 @@ import { withAuth } from '@/components/auth/withAuth';
 const UserManagement = () => {
     const [searchTerm,setSearchTerm] = useState('');
     const debouncedSearchTerm = useDebounce(searchTerm,300);
-    console.log(debouncedSearchTerm)
     const { data: users,isLoading,error } = useGetUsersQuery({ searchTerm: debouncedSearchTerm });
 
 

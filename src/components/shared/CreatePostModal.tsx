@@ -154,7 +154,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                                             className={cn(
                                                 "block w-full rounded-md border-gray-300 shadow-sm",
                                                 error && "border-red-500",
-                                                "h-32 sm:h-40" // Reduced height
+                                                "h-32 sm:h-40"
                                             )}
                                             modules={{
                                                 toolbar: [
@@ -186,9 +186,14 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                                                     <SelectValue placeholder="Select a category" />
                                                 </SelectTrigger>
                                                 <SelectContent>
+                                                    <SelectItem value="all">All</SelectItem>
                                                     <SelectItem value="adventure">Adventure</SelectItem>
+                                                    <SelectItem value="traveling">Traveling</SelectItem>
+                                                    <SelectItem value="tourism">Tourism</SelectItem>
+                                                    <SelectItem value="business travel">Business Travel</SelectItem>
                                                     <SelectItem value="culture">Culture</SelectItem>
-                                                    <SelectItem value="food">Food</SelectItem>
+                                                    <SelectItem value="exploration">Exploration</SelectItem>
+                                                    <SelectItem value="hiking">Hiking</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "@/redux/api/baseApi";
 
 const postApi = baseApi.injectEndpoints({
@@ -14,14 +15,49 @@ const postApi = baseApi.injectEndpoints({
 
     // Get all posts
     getPosts: builder.query({
-      query: ({ searchTerm = "", category = "all", sortOrder = "" }) => ({
+      query: ({ searchTerm, category, sortOrder, page, limit }) => ({
         url: "/posts",
         params: {
           searchTerm,
           category: category === "all" ? undefined : category,
           sortOrder,
+          page,
+          limit,
         },
       }),
+      serializeQueryArgs: ({ queryArgs }) => {
+        return {
+          searchTerm: queryArgs.searchTerm,
+          category: queryArgs.category,
+          sortOrder: queryArgs.sortOrder,
+        };
+      },
+      merge: (currentCache, newItems, { arg }) => {
+        if (arg?.page === 1) {
+          // If it's the first page, replace the entire cache
+          return newItems;
+        } else {
+          // For subsequent pages, append new items
+          return {
+            ...newItems,
+            data: {
+              ...newItems.data,
+              posts: [
+                ...(currentCache.data?.posts || []),
+                ...(newItems.data?.posts || []),
+              ],
+            },
+          };
+        }
+      },
+      forceRefetch({ currentArg, previousArg }) {
+        return (
+          currentArg?.page !== previousArg?.page ||
+          currentArg?.searchTerm !== previousArg?.searchTerm ||
+          currentArg?.category !== previousArg?.category ||
+          currentArg?.sortOrder !== previousArg?.sortOrder
+        );
+      },
       providesTags: ["Posts"],
     }),
 
@@ -53,7 +89,6 @@ const postApi = baseApi.injectEndpoints({
     // Update post
     updatePost: builder.mutation({
       query: ({ id, data }) => {
-        console.log("data", data);
         return {
           url: `/posts/${id}`,
           method: "PATCH",
@@ -107,6 +142,13 @@ const postApi = baseApi.injectEndpoints({
         "Vote",
       ],
     }),
+
+    getAllPosts: builder.query({
+      query: () => ({
+        url: "/posts/allPosts/all",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -119,4 +161,5 @@ export const {
   useDeletePostMutation,
   useUpvotePostMutation,
   useDownvotePostMutation,
+  useGetAllPostsQuery,
 } = postApi;

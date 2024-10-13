@@ -5,19 +5,10 @@ import Link from 'next/link';
 import { usePathname,useRouter } from 'next/navigation';
 import { Home,User,Pencil,Lock,LogOut,CheckCircle,FileText,Users,CreditCard } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useAppDispatch } from '@/redux/hook';
-import { signOut } from '@/redux/features/auth/authSlice';
+import { useAppDispatch,useAppSelector } from '@/redux/hook';
+import { selectCurrentUser,signOut } from '@/redux/features/auth/authSlice';
 
-const navItems = [
-    { href: '/dashboard',label: 'Dashboard',icon: Home },
-    { href: '/dashboard/user/my-profile',label: 'My Profile',icon: User },
-    { href: '/dashboard/user/edit-profile',label: 'Update Profile',icon: Pencil },
-    { href: '/dashboard/user/change-password',label: 'Change Password',icon: Lock },
-    { href: '/dashboard/user/verify-user',label: 'Verify User',icon: CheckCircle },
-    { href: '/dashboard/admin/content-management',label: 'Content Management',icon: FileText },
-    { href: '/dashboard/admin/user-management',label: 'User Management',icon: Users },
-    { href: '/dashboard/admin/payment-management',label: 'Payment Management',icon: CreditCard },
-];
+
 
 
 const SidebarContent = ({ onClose }: { onClose?: () => void }) => {
@@ -29,6 +20,35 @@ const SidebarContent = ({ onClose }: { onClose?: () => void }) => {
         dispatch(signOut());
         router.push('/auth/signin');
     }
+
+    const currentUser = useAppSelector(selectCurrentUser);
+    const userRole = currentUser?.role;
+
+    let navItems = [];
+
+    if (userRole === 'admin') {
+        navItems = [
+            { href: '/dashboard',label: 'Dashboard',icon: Home },
+            { href: '/dashboard/user/my-profile',label: 'My Profile',icon: User },
+            { href: '/dashboard/user/edit-profile',label: 'Update Profile',icon: Pencil },
+            { href: '/dashboard/user/change-password',label: 'Change Password',icon: Lock },
+            { href: '/dashboard/user/verify-user',label: 'Verify User',icon: CheckCircle },
+            { href: '/dashboard/admin/content-management',label: 'Content Management',icon: FileText },
+            { href: '/dashboard/admin/user-management',label: 'User Management',icon: Users },
+            { href: '/dashboard/admin/payment-management',label: 'Payment Management',icon: CreditCard },
+        ];
+
+    }
+    else {
+        navItems = [
+            { href: '/dashboard/user/my-profile',label: 'My Profile',icon: User },
+            { href: '/dashboard/user/edit-profile',label: 'Update Profile',icon: Pencil },
+            { href: '/dashboard/user/change-password',label: 'Change Password',icon: Lock },
+            { href: '/dashboard/user/verify-user',label: 'Verify User',icon: CheckCircle },
+        ];
+
+    }
+
 
     return (
         <div className="h-full flex flex-col justify-between min-h-[95vh]">

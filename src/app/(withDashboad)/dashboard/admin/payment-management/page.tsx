@@ -2,7 +2,7 @@
 'use client'
 
 import React from 'react';
-import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"; // Table components from shadcn
+import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
 import { motion } from 'framer-motion';
 import { useGetPaymentsQuery } from '@/redux/features/payment/paymentApi';
 import Loading from '@/components/shared/Loading';
@@ -12,7 +12,6 @@ const PaymentManagement = () => {
 
     const { data: payments,isLoading } = useGetPaymentsQuery(undefined);
 
-    console.log(payments);
 
     if (isLoading) return <Loading />;
 

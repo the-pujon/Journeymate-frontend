@@ -40,9 +40,9 @@ const UserCard: React.FC<UserCardProps> = ({ user,isFollowing }) => {
                 await followUser({ followingId: userId });
                 toast.success('Followed successfully');
             }
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             toast.error('Something went wrong');
-            console.log(error);
         }
     };
 

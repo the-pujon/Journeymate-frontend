@@ -172,8 +172,10 @@ const VerifyUser = () => {
                                     </AlertDialogContent>
                                 </AlertDialog>
                             ) : (
-                                <Button onClick={handleVerificationRequest} className="w-full">
-                                    Start Verification Process (${verificationFee})
+                                <Button disabled={isLoading || userProfile?.data.verified} onClick={handleVerificationRequest} className="w-full">
+                                    {
+                                        userProfile?.data.verified ? 'Verified' : 'Start Verification Process'
+                                    }
                                 </Button>
                             )}
                         </CardFooter>

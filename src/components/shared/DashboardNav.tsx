@@ -1,8 +1,7 @@
 'use client'
 
 import React from 'react';
-import Link from 'next/link';
-import { Bell,Search,Menu,User,Settings,HelpCircle,LogOut } from 'lucide-react';
+import { Bell,Search,Menu,LogOut } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,10 +12,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import img1 from "@/assets/images/signup3.avif"
+import img1 from "@/assets/images/signupImage.jpg"
 import Image from 'next/image';
+import { useGetUserByIdQuery } from '@/redux/features/user/userApi';
+import { selectCurrentUser,signOut } from '@/redux/features/auth/authSlice';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '@/redux/hook';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export const DashboardNav = ({ onMenuClick }: { onMenuClick: () => void }) => {
+
+    const currentUser = useSelector(selectCurrentUser);
+    const dispatch = useAppDispatch()
+    const router = useRouter()
+    const { data } = useGetUserByIdQuery(currentUser?._id)
+
+
+    const handleLogout = () => {
+        dispatch(signOut())
+        toast.success("Logged out successfully")
+        router.push("/")
+    }
+
     return (
         <nav className="bg-secondary/30 shadow-md py-4 px-6">
             <div className="flex items-center justify-between">
@@ -42,7 +60,7 @@ export const DashboardNav = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         <DropdownMenuTrigger asChild>
                             <div className="relative h-8 w-8 rounded-full border cursor-pointer">
                                 <Image
-                                    src={img1}
+                                    src={data?.data?.profilePicture || img1}
                                     className="h-8 w-8 rounded-full object-cover"
                                     alt="Your avatar"
                                     width={32}
@@ -53,35 +71,18 @@ export const DashboardNav = ({ onMenuClick }: { onMenuClick: () => void }) => {
                         <DropdownMenuContent className="w-56" align="end" forceMount>
                             <DropdownMenuLabel className="font-normal">
                                 <div className="flex flex-col space-y-1">
-                                    <p className="text-sm font-medium leading-none">John Doe</p>
-                                    <p className="text-xs leading-none text-muted-foreground">john.doe@example.com</p>
+                                    <p className="text-sm font-medium leading-none">{data?.data?.user?.name}</p>
+                                    <p className="text-xs leading-none text-muted-foreground">{data?.data?.user?.email}</p>
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem asChild>
-                                <Link href="/dashboard/profile" className="flex items-center">
-                                    <User className="mr-2 h-4 w-4" />
-                                    <span>Profile</span>
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href="/dashboard/settings" className="flex items-center">
-                                    <Settings className="mr-2 h-4 w-4" />
-                                    <span>Settings</span>
-                                </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                <Link href="/dashboard/help" className="flex items-center">
-                                    <HelpCircle className="mr-2 h-4 w-4" />
-                                    <span>Help</span>
-                                </Link>
-                            </DropdownMenuItem>
+
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem asChild>
-                                <Link href="/auth/signin" className="flex items-center">
+                            <DropdownMenuItem >
+                                <Button onClick={handleLogout} className="flex items-center" variant="ghost">
                                     <LogOut className="mr-2 h-4 w-4" />
                                     <span>Log out</span>
-                                </Link>
+                                </Button>
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

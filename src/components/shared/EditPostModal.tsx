@@ -16,7 +16,7 @@ const ReactQuill = dynamic(() => import('react-quill'),{ ssr: false });
 import 'react-quill/dist/quill.snow.css';
 
 interface EditPostModalProps {
-    post: any; // Replace 'any' with your actual Post type
+    post: any;
 }
 
 interface PreviewImage {
@@ -79,9 +79,6 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
                 setOpen(false);
                 return;
             }
-
-            console.log('Changed fields:',changedFields);
-
             await updatePost({ id: post._id,data: changedFields }).unwrap();
             toast.success('Post updated successfully');
             setOpen(false);
@@ -125,10 +122,10 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
 
     const uploadToImgBB = async (images: PreviewImage[]): Promise<string[]> => {
         const uploadPromises = images.map(async (image) => {
-            if (!image.isNew) return image.url; // Return existing URL as is
+            if (!image.isNew) return image.url;
 
             const formData = new FormData();
-            formData.append('image',image.url.split(',')[1]); // Remove the data:image/xxx;base64, part
+            formData.append('image',image.url.split(',')[1]);
             formData.append('key',process.env.NEXT_PUBLIC_IMGBB_API_KEY as string);
 
             const response = await fetch('https://api.imgbb.com/1/upload',{
@@ -248,9 +245,14 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
                                                     <SelectValue placeholder="Select a category" />
                                                 </SelectTrigger>
                                                 <SelectContent>
+                                                    <SelectItem value="all">All</SelectItem>
                                                     <SelectItem value="adventure">Adventure</SelectItem>
+                                                    <SelectItem value="traveling">Traveling</SelectItem>
+                                                    <SelectItem value="tourism">Tourism</SelectItem>
+                                                    <SelectItem value="business travel">Business Travel</SelectItem>
                                                     <SelectItem value="culture">Culture</SelectItem>
-                                                    <SelectItem value="food">Food</SelectItem>
+                                                    <SelectItem value="exploration">Exploration</SelectItem>
+                                                    <SelectItem value="hiking">Hiking</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                             {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}

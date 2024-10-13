@@ -23,10 +23,8 @@ const requestRecoverySchema = z.object({
 type RequestRecoveryFormValues = z.infer<typeof requestRecoverySchema>;
 
 const RequestRecovery: React.FC = () => {
-    const [requestPasswordRecovery,{ isLoading,error }] = useRequestPasswordRecoveryMutation();
+    const [requestPasswordRecovery,{ isLoading }] = useRequestPasswordRecoveryMutation();
     const router = useRouter();
-
-    console.log(error);
 
     const { register,handleSubmit,formState: { errors } } = useForm<RequestRecoveryFormValues>({
         resolver: zodResolver(requestRecoverySchema),
@@ -36,7 +34,7 @@ const RequestRecovery: React.FC = () => {
         try {
             await requestPasswordRecovery(data).unwrap();
             toast.success('Recovery email sent. Please check your inbox.');
-            // Encode the email and add it to the URL
+
             const encodedEmail = encodeURIComponent(data.email);
             router.push(`/auth/verify-recovery?email=${encodedEmail}`);
         } catch (error) {

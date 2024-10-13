@@ -13,32 +13,43 @@ import { withAuth } from '@/components/auth/withAuth';
 
 const NewsFeed = () => {
   const { searchTerm,category,sortOrder } = useAppSelector(selectSearchState);
-  const [displayedPosts,setDisplayedPosts] = useState<any[]>([]);
-  const [hasMore,setHasMore] = useState(true);
+  const [page,setPage] = useState(1);
 
-  const { data: posts,isLoading: postsLoading } = useGetPostsQuery({
+
+  const { data: postsData,isLoading: postsLoading,isFetching,error } = useGetPostsQuery({
     searchTerm,
     category,
-    sortOrder
+    sortOrder: sortOrder || undefined,
+    page,
+    limit: 10,
   });
 
+
+
   useEffect(() => {
-    if (posts?.data) {
-      setDisplayedPosts(posts.data.slice(0,5));
-      setHasMore(posts.data.length > 5);
-    }
-  },[posts]);
+    setPage(1);
+  },[searchTerm,category,sortOrder]);
+
+  useEffect(() => {
+  },[postsData,postsLoading,isFetching,error]);
 
   const fetchMoreData = () => {
-    if (displayedPosts.length >= (posts?.data?.length || 0)) {
-      setHasMore(false);
-      return;
+    if (!isFetching && postsData?.data?.hasMore) {
+      setPage(prevPage => prevPage + 1);
     }
-    const newPosts = posts?.data.slice(0,displayedPosts.length + 10) || [];
-    setDisplayedPosts(newPosts);
   };
 
-  if (postsLoading) return <Loading />;
+  if (postsLoading && page === 1) return <Loading />;
+
+  if (error) {
+    console.error("Error fetching posts:",error);
+    return <div>Error: {JSON.stringify(error)}</div>;
+  }
+
+  const posts = postsData?.data?.posts || [];
+  const hasMore = postsData?.data?.hasMore || false;
+
+
 
   return (
     <div className="flex flex-col md:flex-row container mx-auto px-4 py-8">
@@ -55,23 +66,29 @@ const NewsFeed = () => {
         {searchTerm && (
           <p className="mb-4">Showing results for: &quot;{searchTerm}&quot;</p>
         )}
-        <InfiniteScroll
-          dataLength={displayedPosts.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<Loading />}
-          endMessage={
-            <p className="text-center mt-4">
-              <b>End of posts</b>
-            </p>
-          }
-        >
-          <div className="space-y-6">
-            {displayedPosts.map((post: any) => (
-              <PostCard key={post._id} post={post} userProfile={post.author} isMyProfile={false} />
-            ))}
-          </div>
-        </InfiniteScroll>
+        {posts.length === 0 && !postsLoading && (
+          <p>No posts found.</p>
+        )}
+        {posts.length > 0 && (
+          <InfiniteScroll
+            dataLength={posts.length}
+            next={fetchMoreData}
+            hasMore={hasMore}
+            loader={<Loading />}
+            endMessage={
+              <p className="text-center mt-4">
+                <b>End of posts</b>
+              </p>
+            }
+            key={`${searchTerm}-${category}-${sortOrder}`}
+          >
+            <div className="space-y-6">
+              {posts.map((post: any,index: number) => (
+                <PostCard key={post._id || index} post={post} userProfile={post.author} isMyProfile={false} />
+              ))}
+            </div>
+          </InfiniteScroll>
+        )}
       </div>
     </div>
   );

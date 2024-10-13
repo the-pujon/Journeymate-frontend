@@ -46,7 +46,6 @@ const Navbar = () => {
 
     const { data: user } = useGetUserByIdQuery(currentUser?._id);
 
-    console.log(user?.data);
 
     const [isCreatePostModalOpen,setIsCreatePostModalOpen] = useState(false);
 
@@ -228,8 +227,12 @@ const Navbar = () => {
                                 <SelectContent>
                                     <SelectItem value="all">All</SelectItem>
                                     <SelectItem value="adventure">Adventure</SelectItem>
+                                    <SelectItem value="traveling">Traveling</SelectItem>
+                                    <SelectItem value="tourism">Tourism</SelectItem>
+                                    <SelectItem value="business travel">Business Travel</SelectItem>
                                     <SelectItem value="culture">Culture</SelectItem>
-                                    <SelectItem value="food">Food</SelectItem>
+                                    <SelectItem value="exploration">Exploration</SelectItem>
+                                    <SelectItem value="hiking">Hiking</SelectItem>
                                 </SelectContent>
                             </Select>
                             <Select onOpenChange={(open) => setIsDropdownOpen(open)} onValueChange={(value) => handleSortOrderChange(value)}>

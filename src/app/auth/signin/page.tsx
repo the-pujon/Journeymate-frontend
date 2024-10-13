@@ -27,12 +27,10 @@ const signInSchema = z.object({
 type SignInFormValues = z.infer<typeof signInSchema>;
 
 const SignIn: React.FC = () => {
-    const [signin,{ isLoading,error }] = useSigninMutation();
+    const [signin,{ isLoading }] = useSigninMutation();
     const router = useRouter();
     const dispatch = useAppDispatch();
 
-    console.log(process.env.NEXT_PUBLIC_SERVER_URL);
-    console.log(error);
 
     const { register,handleSubmit,formState: { errors } } = useForm<SignInFormValues>({
         resolver: zodResolver(signInSchema),
@@ -211,6 +209,11 @@ const SignIn: React.FC = () => {
                                         {isLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />}
                                         Sign in
                                     </Button>
+                                </div>
+                                <div className="text-sm text-center">
+                                    <Link href="/auth/signup" className="font-medium text-primary hover:underline text-center">
+                                        Don&apos;t have an account? Sign up
+                                    </Link>
                                 </div>
                             </form>
                         </motion.div>

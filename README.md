@@ -1,36 +1,126 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Travel Tips & Destination Guides Frontend
+
+## Overview
+
+This is the frontend application for the Travel Tips & Destination Guides platform named JourneyMate, a community-driven website for travel enthusiasts to share experiences, tips, and connect with fellow travelers. Built with Next.js and TypeScript, it offers a responsive and interactive user interface for seamless navigation and engagement.
+
+## Live Demo
+
+[Visit the live application](https://journeymateclient.vercel.app/)
+
+## Video Overview
+
+[Watch the project overview](https://drive.google.com/file/d/1tyOII1qXjuJzUDQ1zQgIkXCnp6us_Ovq/view?usp=sharing)
+
+## Features
+
+- User authentication (sign up, sign in, password recovery)
+- User profiles with customization options
+- News feed for browsing travel posts
+- Create, edit, and delete travel posts
+- Comment and voting system on posts
+- User following functionality
+- Premium content access
+- Admin dashboard for content and user management
+- Responsive design for various devices
+
+## Technologies Used
+
+- Next.js 14
+- TypeScript
+- Redux Toolkit for state management
+- Tailwind CSS for styling
+- Shadcn UI components
+- Framer Motion for animations
+- React Hook Form for form handling
+- Zod for form validation
+- Recharts for data visualization
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v14 or later)
+- npm or yarn
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   ```
+   git clone https://github.com/your-repo/travel-tips-frontend.git
+   cd travel-tips-frontend
+   ```
 
-## Learn More
+2. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   or
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```
+   yarn install
+   ```
 
-## Deploy on Vercel
+3. Set up environment variables:
+   Create a `.env.local` file in the root directory and add the following:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```
+   NEXT_PUBLIC_API_URL=your_backend_api_url
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. Run the development server:
+
+   ```
+   npm run dev
+   ```
+
+   or
+
+   ```
+   yarn dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Project Structure
+
+- `src/app`: Contains the main application pages and layouts
+- `src/components`: Reusable React components
+- `src/redux`: Redux store, slices, and API configurations
+- `src/hooks`: Custom React hooks
+- `src/lib`: Utility functions and helpers
+- `src/assets`: Static assets like images and icons
+
+## Key Components
+
+- `Profile`: Displays user profile information and posts
+- `PostCard`: Renders individual post details
+- `CreatePostModal`: Modal for creating new posts
+- `AboutUser`: Shows detailed user information
+- `UserCard`: Displays user information in a card format
+
+## Styling
+
+The project uses Tailwind CSS for styling, with custom configurations in `tailwind.config.ts`. The global styles are defined in `src/app/globals.css`.
+
+## Authentication and Authorization
+
+User authentication is handled using JWT tokens. The `withAuth` higher-order component is used to protect routes that require authentication.
+
+## State Management
+
+Redux Toolkit is used for global state management, with API calls handled by RTK Query.
+
+## Deployment
+
+The frontend is configured for easy deployment on Vercel. Simply connect your GitHub repository to Vercel for automatic deployments.
+
+## Credentials
+
+For testing purposes, use the following credentials:
+
+- **Admin**: web@programming-hero.com / 12345678
+- **User**: user@gmail.com / 12345678

@@ -61,7 +61,6 @@ const PostCard: React.FC<PostCardProps> = ({
 
 
     const handleDeletePost = async (postId: string) => {
-        console.log(`Deleting post ${postId}`);
         try {
             await deletePost(postId);
             toast.success('Post deleted successfully');
@@ -112,7 +111,7 @@ const PostCard: React.FC<PostCardProps> = ({
                                 </Badge>
                             )}
                             {
-                                isMyProfile && post?.length > 0 && <>
+                                isMyProfile && <>
                                     <EditPostModal post={post} />
                                     <Button variant="ghost" size="icon" onClick={() => handleDeletePost(post?._id)}>
                                         <Trash2 className="h-4 w-4" />

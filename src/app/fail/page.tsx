@@ -28,7 +28,7 @@ const FailPayment = () => {
             const paymentData = {
                 transactionId: txnId,
                 status: "failed",
-                amount: 50, // Adjust as needed
+                amount: 50,
             };
             await createPayment(paymentData).unwrap();
         } catch (err) {

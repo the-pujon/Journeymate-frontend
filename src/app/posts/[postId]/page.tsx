@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp,ThumbsDown,MessageSquare,Calendar,RefreshCw,Share2,BookOpen,Users,Crown,Bookmark,Tag,Link2,Loader2 } from "lucide-react";
+import { ThumbsUp,ThumbsDown,MessageSquare,Calendar,RefreshCw,Share2,BookOpen,Users,Crown,Bookmark,Tag,Link2,Loader2,Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card,CardContent } from "@/components/ui/card";
@@ -32,6 +32,7 @@ import Loading from '@/components/shared/Loading';
 import { motion } from 'framer-motion';
 import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
 import { withAuth } from '@/components/auth/withAuth';
+import { usePDF } from 'react-to-pdf';
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -45,6 +46,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const [downvotePost,{ isLoading: isDownvotingPost }] = useDownvotePostMutation();
 
     const { data: voteData,isLoading: isVotingPost } = useGetVoteQuery(params.postId);
+    const { toPDF,targetRef } = usePDF({ filename: 'page.pdf' });
 
     const currentUser = useAppSelector(selectCurrentUser);
     const currentUserId = currentUser?._id;
@@ -147,7 +149,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
             <div className="container mx-auto px-4 py-6 sm:py-8 md:py-12 max-w-7xl">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                     <motion.div className="lg:col-span-2" variants={itemVariants}>
-                        <Card className="mb-6 sm:mb-8 overflow-hidden shadow-lg rounded-xl">
+                        <Card className="mb-6 sm:mb-8 overflow-hidden shadow-lg rounded-xl" ref={targetRef}>
                             <CardContent className="p-0">
                                 {post.image && post.image.length > 0 && (
                                     <div className="relative">
@@ -266,21 +268,27 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                                 <span className="text-xs sm:text-sm">{post.totalComments}</span>
                                             </Button>
                                         </div>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <Button variant="outline" size="sm" className="flex items-center space-x-1">
-                                                    <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                                                    <span className="text-xs sm:text-sm">Share</span>
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-2">
-                                                <div className="flex space-x-2">
-                                                    <Button variant="outline" size="icon" onClick={() => handleShare()}>
-                                                        <Link2 className="w-4 h-4" />
+                                        <div className="flex items-center gap-2">
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                                                        <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                                                        <span className="text-xs sm:text-sm">Share</span>
                                                     </Button>
-                                                </div>
-                                            </PopoverContent>
-                                        </Popover>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-2">
+                                                    <div className="flex space-x-2">
+                                                        <Button variant="outline" size="icon" onClick={() => handleShare()}>
+                                                            <Link2 className="w-4 h-4" />
+                                                        </Button>
+                                                    </div>
+                                                </PopoverContent>
+                                            </Popover>
+                                            <Button onClick={() => toPDF()} variant="outline" className="flex items-center space-x-1" size="sm">
+                                                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                                                {/*<span className="text-xs sm:text-sm">{post.totalComments}</span>*/}
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </CardContent>

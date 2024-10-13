@@ -14,7 +14,7 @@ const SuccessPage = () => {
     const [createPayment,{ isLoading,isError }] = useCreatePaymentMutation();
 
     useEffect(() => {
-        console.log("success page");
+
         const txnId = searchParams.get('transactionId');
         if (txnId) {
             setTransactionId(txnId);
@@ -33,16 +33,15 @@ const SuccessPage = () => {
             const paymentData = {
                 transactionId: txnId,
                 status: "success",
-                amount: 50, // Assuming a fixed amount, adjust as needed
+                amount: 50,
             };
-            const ress = await createPayment(paymentData).unwrap();
-            console.log(ress);
+            await createPayment(paymentData).unwrap();
             toast.success('Payment created successfully');
-            // Redirect to profile page on successful payment creation
+
             router.push('/dashboard/user/my-profile');
         } catch (err) {
             console.error('Failed to create payment:',err);
-            // You might want to show an error message to the user here
+
         }
     };
 
