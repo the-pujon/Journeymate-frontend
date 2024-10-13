@@ -26,6 +26,7 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import Loading from '@/components/shared/Loading';
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -44,7 +45,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const currentUserId = currentUser?._id;
 
     if (isPostLoading || areCommentsLoading) {
-        return <div className="flex justify-center items-center h-screen">Loading...</div>;
+        return <Loading />;
     }
 
     const post = postData?.data;
