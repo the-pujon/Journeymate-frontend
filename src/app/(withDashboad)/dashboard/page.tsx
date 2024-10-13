@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React from 'react';
@@ -20,9 +21,9 @@ const DashboardOverview = () => {
 
     // User statistics
     const totalUsers = users.length;
-    const verifiedUsers = users.filter(user => user.verified).length;
+    const verifiedUsers = users.filter((user: any) => user.verified).length;
     const unverifiedUsers = totalUsers - verifiedUsers;
-    const usersWithPosts = new Set(posts.map(post => post.author._id)).size;
+    const usersWithPosts = new Set(posts.map((post: any) => post.author._id)).size;
     const usersWithoutPosts = totalUsers - usersWithPosts;
 
     const userPieData = [
@@ -37,9 +38,9 @@ const DashboardOverview = () => {
 
     // Post statistics
     const totalPosts = posts.length;
-    const premiumPosts = posts.filter(post => post.premium).length;
+    const premiumPosts = posts.filter((post: any) => post.premium).length;
     const regularPosts = totalPosts - premiumPosts;
-    const totalComments = posts.reduce((sum,post) => sum + post.totalComments,0);
+    const totalComments = posts.reduce((sum: any,post: any) => sum + post.totalComments,0);
     const avgCommentsPerPost = totalPosts > 0 ? (totalComments / totalPosts).toFixed(2) : 0;
 
     const postPieData = [
@@ -47,18 +48,18 @@ const DashboardOverview = () => {
         { name: 'Regular',value: regularPosts },
     ];
 
-    const postEngagementData = posts.map(post => ({
+    const postEngagementData = posts.map((post: any) => ({
         title: post.title.substring(0,20) + '...',
         upVotes: post.upVotes,
         downVotes: post.downVotes,
         comments: post.totalComments,
-    })).sort((a,b) => (b.upVotes + b.comments) - (a.upVotes + a.comments)).slice(0,5);
+    })).sort((a: any,b: any) => (b.upVotes + b.comments) - (a.upVotes + a.comments)).slice(0,5);
 
     // Payment statistics
     const totalPayments = payments.length;
-    const successfulPayments = payments.filter(payment => payment.status === 'success').length;
+    const successfulPayments = payments.filter((payment: any) => payment.status === 'success').length;
     const failedPayments = totalPayments - successfulPayments;
-    const totalRevenue = payments.reduce((sum,payment) => payment.status === 'success' ? sum + payment.amount : sum,0);
+    const totalRevenue = payments.reduce((sum: any,payment: any) => payment.status === 'success' ? sum + payment.amount : sum,0);
     const avgTransactionValue = successfulPayments > 0 ? (totalRevenue / successfulPayments).toFixed(2) : 0;
 
     const paymentPieData = [
@@ -138,14 +139,14 @@ const DashboardOverview = () => {
     );
 };
 
-const StatCard = ({ title,value }) => (
+const StatCard = ({ title,value }: any) => (
     <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-3xl font-bold">{value}</p>
     </div>
 );
 
-const PieChartCard = ({ title,data }) => (
+const PieChartCard = ({ title,data }: any) => (
     <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
         <ResponsiveContainer width="100%" height={200}>
@@ -159,7 +160,7 @@ const PieChartCard = ({ title,data }) => (
                     dataKey="value"
                     label={({ name,percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
-                    {data.map((entry,index) => (
+                    {data.map((entry: any,index: any) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Pie>
@@ -169,8 +170,8 @@ const PieChartCard = ({ title,data }) => (
     </div>
 );
 
-const calculateRevenueData = (payments) => {
-    const revenueByDate = payments.reduce((acc,payment) => {
+const calculateRevenueData = (payments: any) => {
+    const revenueByDate = payments.reduce((acc: any,payment: any) => {
         if (payment.status === 'success') {
             const date = new Date(payment.createdAt).toISOString().split('T')[0];
             acc[date] = (acc[date] || 0) + payment.amount;
@@ -179,8 +180,8 @@ const calculateRevenueData = (payments) => {
     },{});
 
     return Object.entries(revenueByDate)
-        .map(([date,amount]) => ({ date,amount }))
-        .sort((a,b) => new Date(a.date) - new Date(b.date));
+        .map(([date,amount]: any) => ({ date,amount }))
+        .sort((a: any,b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };
 
 export default DashboardOverview;
