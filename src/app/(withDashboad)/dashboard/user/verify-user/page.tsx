@@ -19,6 +19,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import Loading from '@/components/shared/Loading';
+import { withAuth } from '@/components/auth/withAuth';
 
 const VerifyUser = () => {
     const currentUser = useAppSelector(selectCurrentUser);
@@ -217,4 +218,4 @@ const VerifyUser = () => {
     );
 };
 
-export default VerifyUser;
+export default withAuth(VerifyUser,['user','admin']);

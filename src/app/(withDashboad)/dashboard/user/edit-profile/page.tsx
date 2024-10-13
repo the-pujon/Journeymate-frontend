@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import { Camera,User,FileText,Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Loading from '@/components/shared/Loading';
+import { withAuth } from '@/components/auth/withAuth';
 
 interface EditProfileFormInputs {
     name: string;
@@ -237,4 +238,4 @@ const EditProfile = () => {
     );
 };
 
-export default EditProfile;
+export default withAuth(EditProfile,['user','admin']);

@@ -9,6 +9,7 @@ import { useAppSelector } from '@/redux/hook';
 import { selectCurrentUser } from '@/redux/features/auth/authSlice';
 import Loading from '@/components/shared/Loading';
 import Profile from '@/components/shared/Profile';
+import { withAuth } from '@/components/auth/withAuth';
 
 const MyProfile = () => {
     const currentUser = useAppSelector(selectCurrentUser)
@@ -30,4 +31,4 @@ const MyProfile = () => {
 };
 
 
-export default MyProfile;
+export default withAuth(MyProfile,['user','admin']);

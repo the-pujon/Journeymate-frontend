@@ -9,6 +9,7 @@ import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from
 import { toast } from 'sonner';
 import { Loader2,Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { withAuth } from '@/components/auth/withAuth';
 
 interface ChangePasswordFormInputs {
     currentPassword: string;
@@ -140,4 +141,4 @@ const ChangePassword = () => {
     );
 };
 
-export default ChangePassword;
+export default withAuth(ChangePassword,['user','admin']);
