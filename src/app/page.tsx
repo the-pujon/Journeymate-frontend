@@ -9,6 +9,7 @@ import { selectSearchState } from '@/redux/features/search/searchSlice';
 import PostCard from '@/components/shared/PostCard';
 import Loading from '@/components/shared/Loading';
 import PeopleYouMayKnow from '@/components/shared/PeopleYouMayKnow';
+import { withAuth } from '@/components/auth/withAuth';
 
 const NewsFeed = () => {
   const { searchTerm,category,sortOrder } = useAppSelector(selectSearchState);
@@ -76,4 +77,4 @@ const NewsFeed = () => {
   );
 };
 
-export default NewsFeed;
+export default withAuth(NewsFeed,['user','admin']);

@@ -6,6 +6,7 @@ import { ResponsiveContainer,PieChart,Pie,Cell,Tooltip,AreaChart,Area,XAxis,YAxi
 import { useGetUsersQuery } from '@/redux/features/user/userApi';
 import { useGetPostsQuery } from '@/redux/features/post/postApi';
 import { useGetPaymentsQuery } from '@/redux/features/payment/paymentApi';
+import { withAuth } from '@/components/auth/withAuth';
 
 const COLORS = ['#9CC9C6','#115E59','#FFBB28','#FF8042','#8884d8','#82ca9d'];
 
@@ -183,4 +184,4 @@ const calculateRevenueData = (payments: any) => {
         .sort((a: any,b: any) => new Date(a.date).getTime() - new Date(b.date).getTime());
 };
 
-export default DashboardOverview;
+export default withAuth(DashboardOverview,['admin']);

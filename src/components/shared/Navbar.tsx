@@ -25,7 +25,7 @@ import {
 import { useAppDispatch,useAppSelector } from '@/redux/hook';
 import { useRouter } from 'next/navigation';
 import { setCategory,setSearchTerm,setSortOrder } from '@/redux/features/search/searchSlice';
-import { selectCurrentUser } from '@/redux/features/auth/authSlice';
+import { selectCurrentUser,signOut } from '@/redux/features/auth/authSlice';
 import { useGetUserByIdQuery } from '@/redux/features/user/userApi';
 import CreatePostModal from './CreatePostModal'; // Import the CreatePostModal component
 
@@ -82,6 +82,11 @@ const Navbar = () => {
     const handleSortOrderChange = (value: string) => {
         setSelectedSortOrder(value)
         dispatch(setSortOrder(value));
+    };
+
+    const handleLogout = () => {
+        dispatch(signOut());
+        router.push('/auth/signin');
     };
 
     return (
@@ -170,7 +175,7 @@ const Navbar = () => {
                                                             </DropdownMenuItem>
                                                         )
                                                     }
-                                                    <DropdownMenuItem>Logout</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </motion.div>
