@@ -8,7 +8,6 @@ export interface TUser {
   password: string;
   phone: string;
   role?: string;
-  address: string;
 }
 
 type TAuthState = {
