@@ -32,28 +32,32 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 
     if (result.error) {
       if (result.error.status === 401) {
-        console.error("Unauthorized access. Please check your credentials.");
+        console.error("Unauthorized access. Please login again.");
+        toast.error("Unauthorized access. Please login again.");
       } else if (result.error.status === 403) {
         console.error(
+          "Forbidden. You do not have permission to access this resource."
+        );
+        toast.error(
           "Forbidden. You do not have permission to access this resource."
         );
       } else if (result.error.status === 404) {
         toast.error("Resource not found.");
       } else if (result.error.status === 500) {
         console.error("Server error:", result.error);
-        toast.error(
-          "An unexpected server error occurred. Please try again later."
-        );
+        //toast.error(
+        //  "An unexpected server error occurred. Please try again later."
+        //);
       } else {
         console.error("An unexpected error occurred:", result.error);
-        toast.error("An unexpected error occurred. Please try again.");
+        //toast.error("An unexpected error occurred. Please try again.");
       }
     }
 
     return result;
   } catch (error) {
     console.error("An error occurred during the request:", error);
-    toast.error("An error occurred. Please try again later.");
+    //toast.error("An error occurred. Please try again later.");
     throw error;
   }
 };
@@ -70,6 +74,7 @@ export const baseApi = createApi({
     "Comments",
     "Comment",
     "Vote",
+    "Payment",
   ],
   endpoints: () => ({}),
 });

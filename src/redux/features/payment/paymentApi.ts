@@ -8,18 +8,21 @@ const paymentApi = baseApi.injectEndpoints({
         method: "POST",
         body: paymentData,
       }),
+      invalidatesTags: ["Payment", "User", "Users"],
     }),
     getPayments: builder.query({
       query: () => ({
         url: "/payments",
         method: "GET",
       }),
+      providesTags: ["Payment"],
     }),
     deletePayment: builder.mutation({
       query: (id) => ({
         url: `/payments/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Payment"],
     }),
   }),
 });

@@ -137,7 +137,7 @@ const VerifyUser = () => {
                 tran_id: Date.now().toString(),
                 desc: `User Verification Payment`,
                 success_url: `${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/success`,
-                fail_url: `${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/fail`,
+                fail_url: `${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/failure`,
                 cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL as string}/`,
                 type: 'json'
             })

@@ -26,18 +26,18 @@ interface PreviewImage {
 const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
     const [open,setOpen] = useState(false);
     const [previewImages,setPreviewImages] = useState<PreviewImage[]>(
-        post.image.map((url: string) => ({ url,isNew: false })) || []
+        post?.image.map((url: string) => ({ url,isNew: false })) || []
     );
     const [isImageUploading,setIsImageUploading] = useState(false);
     const [updatePost,{ isLoading }] = useUpdatePostMutation();
     const { control,handleSubmit,reset,setValue,watch } = useForm({
         defaultValues: {
-            title: post.title,
-            content: post.content,
-            category: post.category,
-            tags: post.tags,
+            title: post?.title,
+            content: post?.content,
+            category: post?.category,
+            tags: post?.tags,
             tagInput: '',
-            image: post.image
+            image: post?.image
         }
     });
 
@@ -54,7 +54,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
                 tagInput: '',
                 image: post.image
             });
-            setPreviewImages(post.image.map((url: string) => ({ url,isNew: false })) || []);
+            setPreviewImages(post?.image?.map((url: string) => ({ url,isNew: false })) || []);
         }
     },[post,reset,open]);
 
