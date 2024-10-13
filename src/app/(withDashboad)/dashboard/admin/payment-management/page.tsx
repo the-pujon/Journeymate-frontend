@@ -6,6 +6,7 @@ import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/comp
 import { motion } from 'framer-motion';
 import { useGetPaymentsQuery } from '@/redux/features/payment/paymentApi';
 import Loading from '@/components/shared/Loading';
+import { withAuth } from '@/components/auth/withAuth';
 
 const PaymentManagement = () => {
 
@@ -63,4 +64,4 @@ const PaymentManagement = () => {
     );
 };
 
-export default PaymentManagement;
+export default withAuth(PaymentManagement,['admin']);

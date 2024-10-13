@@ -16,6 +16,7 @@ import Loading from '@/components/shared/Loading';
 import { Input } from "@/components/ui/input";
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
 import { useDebounce } from '@/hooks/useDebounce';
+import { withAuth } from '@/components/auth/withAuth';
 
 const ContentManagement = () => {
     const [searchTerm,setSearchTerm] = useState('');
@@ -205,4 +206,4 @@ const ContentManagement = () => {
     );
 };
 
-export default ContentManagement;
+export default withAuth(ContentManagement,['admin']);

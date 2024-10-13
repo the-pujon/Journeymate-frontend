@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import Loading from '@/components/shared/Loading';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table";
+import { withAuth } from '@/components/auth/withAuth';
 
 const UserManagement = () => {
     const [searchTerm,setSearchTerm] = useState('');
@@ -90,4 +91,4 @@ const UserManagement = () => {
     );
 };
 
-export default UserManagement;
+export default withAuth(UserManagement,['admin']);
