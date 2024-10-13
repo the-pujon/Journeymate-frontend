@@ -53,72 +53,127 @@ const VerifyUser = () => {
         },
     };
 
-    const handleVerificationRequest = async () => {
-        if (userProfile?.data.totalUpvotes === 0) {
-            return; // The AlertDialog will handle this case
-        }
+    //const handleVerificationRequest = async () => {
+    //    if (userProfile?.data.totalUpvotes === 0) {
+    //        return; // The AlertDialog will handle this case
+    //    }
+
+    //    try {
+    //        const url = "https://sandbox.aamarpay.com/jsonpost.php";
+
+    //        const payload = {
+    //            store_id: "aamarpaytest",
+    //            tran_id: "123123173", // You might want to generate a unique transaction ID
+    //            success_url: "http://localhost:3333/api/payment/success",
+    //            fail_url: "http://localhost:3333/api/payment/fail",
+    //            cancel_url: "http://localhost:3333/api/payment/cancel",
+    //            amount: "10.0", // Adjust the amount as needed
+    //            currency: "BDT",
+    //            signature_key: "dbb74894e82415a2f7ff0ec3a97e4183",
+    //            desc: "User Verification Payment",
+    //            cus_name: userProfile?.data.name || "User",
+    //            cus_email: userProfile?.data.email || "user@example.com",
+    //            cus_add1: "Address Line 1",
+    //            cus_add2: "Address Line 2",
+    //            cus_city: "City",
+    //            cus_state: "State",
+    //            cus_postcode: "1234",
+    //            cus_country: "Country",
+    //            cus_phone: userProfile?.data.phone || "+1234567890",
+    //            type: "json"
+    //        };
+
+    //        const response = await fetch(url,{
+    //            method: 'POST',
+    //            headers: {
+    //                'Content-Type': 'application/json',
+    //            },
+    //            body: JSON.stringify(payload),
+    //        });
+
+    //        if (!response.ok) {
+    //            throw new Error(`HTTP error! status: ${response.status}`);
+    //        }
+
+    //        const data = await response.json();
+    //        console.log(data);
+
+    //        // Handle the response from aamarpay
+    //        if (data.result === "true") {
+    //            // Payment initiation successful
+    //            window.location.href = data.payment_url;
+    //        } else {
+    //            // Payment initiation failed
+    //            toast.error('Failed to initiate payment: ' + data.error);
+    //        }
+
+    //        // If payment is successful, proceed with verification request
+    //        //await requestVerification({ userId }).unwrap();
+    //        toast.success('Verification request submitted successfully');
+    //    } catch (error) {
+    //        toast.error('Failed to submit verification request');
+    //        console.error(error);
+    //    }
+    //};
+
+    console.log(`${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/success`);
+
+
+    const handleVerificationRequest = async (formData) => {
 
         try {
-            const url = "https://sandbox.aamarpay.com/jsonpost.php";
+            // Save form data to local storage
 
-            const payload = {
-                store_id: "aamarpaytest",
-                tran_id: "123123173", // You might want to generate a unique transaction ID
-                success_url: "http://localhost:3333/api/payment/success",
-                fail_url: "http://localhost:3333/api/payment/fail",
-                cancel_url: "http://localhost:3333/api/payment/cancel",
-                amount: "10.0", // Adjust the amount as needed
-                currency: "BDT",
-                signature_key: "dbb74894e82415a2f7ff0ec3a97e4183",
-                desc: "User Verification Payment",
-                cus_name: userProfile?.data.name || "User",
-                cus_email: userProfile?.data.email || "user@example.com",
-                cus_add1: "Address Line 1",
-                cus_add2: "Address Line 2",
-                cus_city: "City",
-                cus_state: "State",
-                cus_postcode: "1234",
-                cus_country: "Country",
-                cus_phone: userProfile?.data.phone || "+1234567890",
-                type: "json"
-            };
+            localStorage.setItem('expectingRedirect','true');
 
-            const response = await fetch(url,{
+            const payload = new URLSearchParams({
+                store_id: 'aamarpaytest',
+                signature_key: 'dbb74894e82415a2f7ff0ec3a97e4183',
+                cus_name: 'Customer Name',
+                cus_email: 'example@gmail.com',
+                cus_phone: '01870******',
+                amount: '10',
+                currency: 'BDT',
+                tran_id: Date.now().toString(),
+                desc: `User Verification Payment`,
+                success_url: `${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/success`,
+                fail_url: `${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/fail`,
+                cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_URL as string}/`,
+                type: 'json'
+            })
+
+            const response = await fetch('https://sandbox.aamarpay.com/index.php',{
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify(payload),
-            });
+                body: payload
+            })
 
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`)
             }
 
-            const data = await response.json();
-            console.log(data);
+            const result = await response.json()
 
-            // Handle the response from aamarpay
-            if (data.result === "true") {
-                // Payment initiation successful
-                window.location.href = data.payment_url;
+            if (result.payment_url) {
+                window.location.href = result.payment_url
             } else {
-                // Payment initiation failed
-                toast.error('Failed to initiate payment: ' + data.error);
+                throw new Error('No payment URL received')
             }
-
-            // If payment is successful, proceed with verification request
-            await requestVerification({ userId }).unwrap();
-            toast.success('Verification request submitted successfully');
         } catch (error) {
-            toast.error('Failed to submit verification request');
-            console.error(error);
+            console.error('Payment initiation failed:',error)
+        } finally {
+            //setIsLoading(false)
         }
-    };
+    }
+
 
     if (isLoading) {
         return <Loading />;
     }
+
+    const verificationFee = 50;
 
     return (
         <motion.div
@@ -162,6 +217,9 @@ const VerifyUser = () => {
                                 <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Priority support</span></li>
                                 <li className="flex items-center"><CheckCircle className="mr-2 text-green-600 flex-shrink-0" /> <span>Exclusive content</span></li>
                             </ul>
+                            <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                                <p className=" font-semibold">Verification Fee: ${verificationFee}</p>
+                            </div>
                         </CardContent>
                         <CardFooter className="pt-6">
                             {userProfile?.data.totalUpvotes === 0 ? (
@@ -183,7 +241,7 @@ const VerifyUser = () => {
                                 </AlertDialog>
                             ) : (
                                 <Button onClick={handleVerificationRequest} className="w-full">
-                                    Start Verification Process
+                                    Start Verification Process (${verificationFee})
                                 </Button>
                             )}
                         </CardFooter>
