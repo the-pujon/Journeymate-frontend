@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React,{ useState,useEffect } from 'react';
 import { useForm,Controller } from 'react-hook-form';
 import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogFooter,DialogTrigger } from "@/components/ui/dialog";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
 import { useUpdatePostMutation } from '@/redux/features/post/postApi';
-import { X,Upload,Image as ImageIcon,Tag,Globe,Loader2,Pencil } from 'lucide-react';
+import { X,Image as ImageIcon,Tag,Globe,Loader2,Pencil } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { cn } from "@/lib/utils";
 import dynamic from 'next/dynamic';

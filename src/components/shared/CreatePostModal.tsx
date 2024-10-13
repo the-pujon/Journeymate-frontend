@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React,{ useState } from 'react';
 import { useForm,Controller } from 'react-hook-form';
 import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
 import { useCreatePostMutation } from '@/redux/features/post/postApi';
-import { X,Upload,Image as ImageIcon,Tag,Globe,Loader2 } from 'lucide-react';
+import { X,Image as ImageIcon,Tag,Globe,Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { cn } from "@/lib/utils";
 import dynamic from 'next/dynamic';
 
@@ -30,7 +29,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
             title: '',
             content: '',
             category: '',
-            tags: [],
+            tags: [''],
             tagInput: ''
         }
     });
