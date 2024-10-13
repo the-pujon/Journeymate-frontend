@@ -20,6 +20,7 @@ const FailPayment = () => {
         } else {
             router.push('/');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[searchParams,router]);
 
     const handleFailedPayment = async (txnId: string) => {

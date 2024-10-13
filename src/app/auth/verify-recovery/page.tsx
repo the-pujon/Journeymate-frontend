@@ -1,6 +1,6 @@
 'use client';
 
-import React,{ useEffect,useState } from 'react';
+import React,{ Suspense,useEffect,useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter,useSearchParams } from 'next/navigation';
@@ -23,7 +23,15 @@ const verifyRecoverySchema = z.object({
 
 type VerifyRecoveryFormValues = z.infer<typeof verifyRecoverySchema>;
 
-const VerifyRecovery: React.FC = () => {
+function VerifyRecovery() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <VerifyRecoveryContent />
+        </Suspense>
+    )
+}
+
+const VerifyRecoveryContent: React.FC = () => {
     const searchParams = useSearchParams();
     const [verifyRecoveryCode,{ isLoading }] = useVerifyRecoveryCodeMutation();
     const router = useRouter();

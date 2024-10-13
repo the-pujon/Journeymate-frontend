@@ -25,6 +25,7 @@ const SuccessPage = () => {
         if (isError) {
             router.push('/dashboard/user/my-profile');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[searchParams,router]);
 
     const handlePayment = async (txnId: string) => {
