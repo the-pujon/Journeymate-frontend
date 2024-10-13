@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import Loading from '@/components/shared/Loading';
+import { motion } from 'framer-motion';
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -116,11 +117,38 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
         }
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0,y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 100
+            }
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-gray-50">
+        <motion.div
+            className="min-h-screen bg-gray-50"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
             <div className="container mx-auto px-4 py-6 sm:py-8 md:py-12 max-w-7xl">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-                    <div className="lg:col-span-2">
+                    <motion.div className="lg:col-span-2" variants={itemVariants}>
                         <Card className="mb-6 sm:mb-8 overflow-hidden shadow-lg rounded-xl">
                             <CardContent className="p-0">
                                 {post.image && post.image.length > 0 && (
@@ -204,7 +232,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                         <span className="flex items-center"><RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" /> Updated: {format(new Date(post.updatedAt),'PPP')}</span>
                                     </div>
                                     <Separator className="my-4 sm:my-6" />
-                                    <div className="flex flex-wrap justify-between items-center">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                                         <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-0">
                                             <Button
                                                 variant="outline"
@@ -249,44 +277,47 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                             </CardContent>
                         </Card>
 
-                        <Card className="mb-6 sm:mb-8 shadow-lg rounded-xl">
-                            <CardContent className="p-4 sm:p-6">
-                                <h2 className="text-xl sm:text-2xl font-semibold mb-4">Comments</h2>
-                                <Textarea
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                    placeholder={replyingTo ? "Write a reply..." : "Write a comment..."}
-                                    className="mb-4"
-                                />
-                                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                                    <Button onClick={handleCreateComment} className="w-full sm:w-auto bg-primary text-white hover:bg-primary-dark">
-                                        {replyingTo ? "Post Reply" : "Post Comment"}
-                                    </Button>
-                                    {replyingTo && (
-                                        <Button variant="outline" onClick={() => setReplyingTo(null)} className="w-full sm:w-auto">
-                                            Cancel Reply
+                        <motion.div variants={itemVariants}>
+                            <Card className="mb-6 sm:mb-8 shadow-lg rounded-xl">
+                                <CardContent className="p-4 sm:p-6">
+                                    <h2 className="text-xl sm:text-2xl font-semibold mb-4">Comments</h2>
+                                    <Textarea
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                        placeholder={replyingTo ? "Write a reply..." : "Write a comment..."}
+                                        className="mb-4"
+                                    />
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
+                                        <Button onClick={handleCreateComment} className="w-full sm:w-auto bg-primary text-white hover:bg-primary-dark">
+                                            {replyingTo ? "Post Reply" : "Post Comment"}
                                         </Button>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                                        {replyingTo && (
+                                            <Button variant="outline" onClick={() => setReplyingTo(null)} className="w-full sm:w-auto">
+                                                Cancel Reply
+                                            </Button>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
 
-                        <div className="space-y-4 sm:space-y-6">
+                        <motion.div className="space-y-4 sm:space-y-6" variants={containerVariants}>
                             {comments.map((comment) => (
-                                <Comment
-                                    key={comment._id}
-                                    comment={comment}
-                                    onReply={(commentId) => setReplyingTo(commentId)}
-                                    onEdit={handleEditComment}
-                                    onDelete={handleDeleteComment}
-                                    onVote={handleVoteComment}
-                                    currentUserId={currentUserId}
-                                />
+                                <motion.div key={comment._id} variants={itemVariants}>
+                                    <Comment
+                                        comment={comment}
+                                        onReply={(commentId) => setReplyingTo(commentId)}
+                                        onEdit={handleEditComment}
+                                        onDelete={handleDeleteComment}
+                                        onVote={handleVoteComment}
+                                        currentUserId={currentUserId}
+                                    />
+                                </motion.div>
                             ))}
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
 
-                    <div className="lg:col-span-1">
+                    <motion.div className="lg:col-span-1" variants={itemVariants}>
                         <div className="sticky top-20 space-y-6">
                             <Card className="shadow-lg rounded-xl overflow-hidden">
                                 <CardContent className="p-0">
@@ -318,10 +349,10 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                 </CardContent>
                             </Card>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
