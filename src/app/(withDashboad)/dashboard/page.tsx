@@ -7,8 +7,7 @@ import { useGetUsersQuery } from '@/redux/features/user/userApi';
 import { useGetPostsQuery } from '@/redux/features/post/postApi';
 import { useGetPaymentsQuery } from '@/redux/features/payment/paymentApi';
 
-// Define the COLORS array
-const COLORS = ['#0088FE','#00C49F','#FFBB28','#FF8042','#8884d8','#82ca9d'];
+const COLORS = ['#9CC9C6','#115E59','#FFBB28','#FF8042','#8884d8','#82ca9d'];
 
 const DashboardOverview = () => {
     const { data: usersData } = useGetUsersQuery({ searchTerm: "" });
@@ -88,7 +87,7 @@ const DashboardOverview = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-secondary/20 p-6 rounded-lg shadow">
                     <h2 className="text-xl font-semibold mb-4">User Activity</h2>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={userActivityData}>
@@ -96,11 +95,11 @@ const DashboardOverview = () => {
                             <XAxis dataKey="name" />
                             <YAxis />
                             <Tooltip />
-                            <Bar dataKey="value" fill="#8884d8" />
+                            <Bar dataKey="value" fill="#115E59" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow">
+                <div className="bg-secondary/20 p-6 rounded-lg shadow">
                     <h2 className="text-xl font-semibold mb-4">Top 5 Engaging Posts</h2>
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={postEngagementData}>
@@ -109,14 +108,14 @@ const DashboardOverview = () => {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="upVotes" stackId="a" fill="#8884d8" />
-                            <Bar dataKey="comments" stackId="a" fill="#82ca9d" />
+                            <Bar dataKey="upVotes" stackId="a" fill="#115E59" />
+                            <Bar dataKey="comments" stackId="a" fill="#9CC9C6" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow mb-6">
+            <div className="bg-secondary/20 p-6 rounded-lg shadow mb-6">
                 <h2 className="text-xl font-semibold mb-4">Revenue Overview</h2>
                 <ResponsiveContainer width="100%" height={300}>
                     <AreaChart data={revenueData}>
@@ -124,7 +123,7 @@ const DashboardOverview = () => {
                         <XAxis dataKey="date" />
                         <YAxis />
                         <Tooltip />
-                        <Area type="monotone" dataKey="amount" stroke="#8884d8" fill="#8884d8" />
+                        <Area type="monotone" dataKey="amount" stroke="#115E59" fill="#115E59" />
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
@@ -140,16 +139,16 @@ const DashboardOverview = () => {
 };
 
 const StatCard = ({ title,value }: any) => (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-secondary/20 p-6 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-2">{title}</h2>
         <p className="text-3xl font-bold">{value}</p>
     </div>
 );
 
 const PieChartCard = ({ title,data }: any) => (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-secondary/20 p-10 rounded-lg shadow">
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={300}>
             <PieChart>
                 <Pie
                     data={data}
