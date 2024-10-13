@@ -4,6 +4,7 @@ import React,{ useEffect,useState } from 'react';
 import { useRouter,useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useCreatePaymentMutation } from '@/redux/features/payment/paymentApi';
+import { withAuth } from '@/components/auth/withAuth';
 
 const FailPayment = () => {
     const [transactionId,setTransactionId] = useState<string | null>(null);
@@ -62,4 +63,4 @@ const FailPayment = () => {
     );
 };
 
-export default FailPayment;
+export default withAuth(FailPayment,['user','admin']);

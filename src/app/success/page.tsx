@@ -5,6 +5,7 @@ import React,{ useEffect,useState } from 'react';
 import { useRouter,useSearchParams } from 'next/navigation';
 import { useCreatePaymentMutation } from '@/redux/features/payment/paymentApi';
 import { toast } from 'sonner';
+import { withAuth } from '@/components/auth/withAuth';
 
 const SuccessPage = () => {
     const [transactionId,setTransactionId] = useState<string | null>(null);
@@ -66,4 +67,4 @@ const SuccessPage = () => {
     );
 };
 
-export default SuccessPage;
+export default withAuth(SuccessPage,['user','admin']);

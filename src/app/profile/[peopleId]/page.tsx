@@ -1,5 +1,6 @@
 "use client"
 
+import { withAuth } from '@/components/auth/withAuth';
 import Loading from '@/components/shared/Loading';
 import Profile from '@/components/shared/Profile';
 import { useGetUserByIdQuery } from '@/redux/features/user/userApi';
@@ -22,4 +23,4 @@ const PeopleDetailsPage = ({ params }: { params: { peopleId: string } }) => {
     );
 };
 
-export default PeopleDetailsPage;
+export default withAuth(PeopleDetailsPage,['user','admin']);

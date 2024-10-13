@@ -5,9 +5,8 @@ import { useAppSelector } from '@/redux/hook';
 import { selectCurrentUser,useCurrentToken } from '@/redux/features/auth/authSlice';
 import Loading from '@/components/shared/Loading';
 import { toast } from 'sonner';
-
-export function withAuth(WrappedComponent: React.ComponentType,allowedRoles?: string[]) {
-    return function AuthenticatedComponent(props: any) {
+export function withAuth<P extends object>(WrappedComponent: React.ComponentType<P>,allowedRoles?: string[]) {
+    return function AuthenticatedComponent(props: P) {
         const router = useRouter();
         const currentUser = useAppSelector(selectCurrentUser);
         const token = useAppSelector(useCurrentToken);

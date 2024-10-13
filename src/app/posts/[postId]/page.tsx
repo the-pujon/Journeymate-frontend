@@ -31,6 +31,7 @@ import Autoplay from "embla-carousel-autoplay"
 import Loading from '@/components/shared/Loading';
 import { motion } from 'framer-motion';
 import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
+import { withAuth } from '@/components/auth/withAuth';
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -369,4 +370,4 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     );
 };
 
-export default PostDetailsPage;
+export default withAuth(PostDetailsPage,['user','admin']);

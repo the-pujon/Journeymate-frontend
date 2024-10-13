@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import Loading from '@/components/shared/Loading';
 import UserCard from '@/components/shared/UserCard';
 import { useDebounce } from '@/hooks/useDebounce';
+import { withAuth } from '@/components/auth/withAuth';
 
 const PeoplePage = () => {
     const [searchTerm,setSearchTerm] = useState('');
@@ -107,4 +108,4 @@ const PeoplePage = () => {
     );
 };
 
-export default PeoplePage;
+export default withAuth(PeoplePage,['user','admin']);
