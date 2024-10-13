@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from "@/components/ui/select";
 import { useCreatePostMutation } from '@/redux/features/post/postApi';
-import { X,Upload,Image as ImageIcon,Tag,Globe } from 'lucide-react';
+import { X,Upload,Image as ImageIcon,Tag,Globe,Loader2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { cn } from "@/lib/utils";
@@ -14,8 +14,7 @@ import dynamic from 'next/dynamic';
 
 const ReactQuill = dynamic(() => import('react-quill'),{ ssr: false });
 import 'react-quill/dist/quill.snow.css';
-
-//const IMGBB_API_KEY = 'YOUR_IMGBB_API_KEY'; // Replace with your actual ImgBB API key
+import { toast } from 'sonner';
 
 interface CreatePostModalProps {
     isOpen: boolean;
@@ -24,23 +23,32 @@ interface CreatePostModalProps {
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => {
     const [previewImages,setPreviewImages] = useState<string[]>([]);
-    const [tags,setTags] = useState<string[]>([]);
+    const [isImageUploading,setIsImageUploading] = useState(false);
     const [createPost,{ isLoading }] = useCreatePostMutation();
-    const { control,handleSubmit,reset } = useForm();
+    const { control,handleSubmit,reset,setValue,watch } = useForm({
+        defaultValues: {
+            title: '',
+            content: '',
+            category: '',
+            tags: [],
+            tagInput: ''
+        }
+    });
+
+    const tags = watch('tags');
+    const tagInput = watch('tagInput');
 
     const onSubmit = async (data: any) => {
-
-        console.log(data)
-
         try {
             const imageUrls = await uploadImages(previewImages);
-            const postData = { ...data,image: imageUrls,tags };
+            const postData = { ...data,image: imageUrls,tags: data.tags };
+            delete postData.tagInput;
 
             await createPost(postData).unwrap();
+            toast.success('Post published successfully');
             onClose();
             reset();
             setPreviewImages([]);
-            setTags([]);
         } catch (error) {
             console.error('Failed to create post:',error);
         }
@@ -64,19 +72,20 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
     const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
-            const value = (e.target as HTMLInputElement).value.trim();
+            const value = tagInput.trim();
             if (value && !tags.includes(value)) {
-                setTags(prev => [...prev,value]);
-                (e.target as HTMLInputElement).value = '';
+                setValue('tags',[...tags,value]);
+                setValue('tagInput','');
             }
         }
     };
 
     const removeTag = (tagToRemove: string) => {
-        setTags(prev => prev.filter(tag => tag !== tagToRemove));
+        setValue('tags',tags.filter(tag => tag !== tagToRemove));
     };
 
     const uploadImages = async (images: string[]): Promise<string[]> => {
+        setIsImageUploading(true);
         const uploadPromises = images.map(async (image) => {
             const base64Image = image.split(',')[1];
             const formData = new FormData();
@@ -90,21 +99,23 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
             const data = await response.json();
             return data.data.url;
         });
+        setIsImageUploading(false);
 
         return Promise.all(uploadPromises);
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[600px] md:h-full p-0 overflow-y-auto to-primary ">
-                <DialogHeader className="p-6 bg-primary/80 text-white">
+            <DialogContent className="sm:max-w-[600px] h-screen md:h-[85vh] p-0 overflow-y-auto">
+                <DialogHeader className="p-6 bg-primary/80 text-white h-24">
                     <DialogTitle className="text-2xl font-bold flex items-center">
                         <Globe className="mr-2" />
                         Create a New Journey
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
-                    <div className="space-y-4">
+                    <div className="flex flex-col gap-6">
+                        {/* Title field */}
                         <div>
                             <Label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-300">Title</Label>
                             <Controller
@@ -128,6 +139,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                             />
                         </div>
 
+                        {/* Content field with reduced height */}
                         <div>
                             <Label htmlFor="content" className="text-sm font-medium text-gray-700 dark:text-gray-300">Content</Label>
                             <Controller
@@ -135,15 +147,24 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                                 control={control}
                                 rules={{ required: 'Content is required' }}
                                 render={({ field,fieldState: { error } }) => (
-                                    <div>
+                                    <div className="mt-1">
                                         <ReactQuill
                                             theme="snow"
                                             value={field.value}
                                             onChange={field.onChange}
                                             className={cn(
-                                                "mt-1 block w-full rounded-md border-gray-300 shadow-sm",
-                                                error && "border-red-500"
+                                                "block w-full rounded-md border-gray-300 shadow-sm",
+                                                error && "border-red-500",
+                                                "h-32 sm:h-40" // Reduced height
                                             )}
+                                            modules={{
+                                                toolbar: [
+                                                    ['bold','italic','underline','strike'],
+                                                    [{ 'list': 'ordered' },{ 'list': 'bullet' }],
+                                                    ['link'],
+                                                    ['clean']
+                                                ],
+                                            }}
                                         />
                                         {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                                     </div>
@@ -151,7 +172,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                             />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Category and Tags fields */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                             <div>
                                 <Label htmlFor="category" className="text-sm font-medium text-gray-700 dark:text-gray-300">Category</Label>
                                 <Controller
@@ -160,7 +182,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                                     rules={{ required: 'Category is required' }}
                                     render={({ field,fieldState: { error } }) => (
                                         <div>
-                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <Select onValueChange={field.onChange} value={field.value}>
                                                 <SelectTrigger id="category" className={cn("mt-1",error && "border-red-500")}>
                                                     <SelectValue placeholder="Select a category" />
                                                 </SelectTrigger>
@@ -180,11 +202,18 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                                 <Label htmlFor="tags" className="text-sm font-medium text-gray-700 dark:text-gray-300">Tags</Label>
                                 <div className="relative">
                                     <Tag className="absolute top-3 left-3 h-5 w-5 text-gray-400" />
-                                    <Input
-                                        id="tags"
-                                        placeholder="Enter tags, press Enter to add"
-                                        onKeyDown={handleTagInput}
-                                        className="mt-1 pl-10 block w-full rounded-md border-gray-300 shadow-sm"
+                                    <Controller
+                                        name="tagInput"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <Input
+                                                id="tags"
+                                                placeholder="Enter tags, press Enter to add"
+                                                {...field}
+                                                onKeyDown={handleTagInput}
+                                                className="mt-1 pl-10 block w-full rounded-md border-gray-300 shadow-sm"
+                                            />
+                                        )}
                                     />
                                 </div>
                                 <div className="flex flex-wrap mt-2 gap-2">
@@ -238,8 +267,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                         <Button type="button" variant="outline" onClick={onClose} className="mr-0 sm:mr-2 ">
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isLoading} className=" text-white mb-2 sm:mb-0">
-                            {isLoading ? 'Creating...' : 'Create Journey'}
+                        <Button type="submit" disabled={isLoading || isImageUploading} className=" text-white mb-2 sm:mb-0">
+                            {isLoading || isImageUploading ? <><Loader2 className="animate-spin mr-2" />Creating...</> : 'Create Journey'}
                         </Button>
                     </DialogFooter>
                 </form>

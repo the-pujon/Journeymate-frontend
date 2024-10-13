@@ -71,3 +71,18 @@ body {
 .wrapper {
   @apply max-w-screen-2xl mx-auto px-2 md:px-5;
 }
+
+.reactQuillRichText ul,
+.reactQuillRichText ol,
+.reactQuillRichText p,
+.reactQuillRichText h1,
+.reactQuillRichText h2,
+.reactQuillRichText h3,
+.reactQuillRichText h4,
+.reactQuillRichText h5,
+.reactQuillRichText h6,
+.reactQuillRichText blockquote,
+.reactQuillRichText li {
+  all: revert !important;
+  margin: 0 !important;
+}

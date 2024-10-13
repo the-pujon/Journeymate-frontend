@@ -131,7 +131,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         {post?.image && post?.image?.length > 0 && (
                             <img src={post?.image[0]} alt={post?.title} className="w-full h-48 sm:h-64 object-cover mb-4 rounded-md" />
                         )}
-                        <p className={`text-gray-600 ${expandedPosts.includes(post?._id) ? '' : 'line-clamp-3'}`} dangerouslySetInnerHTML={{ __html: post?.content }}>
+                        <p className={`reactQuillRichText text-gray-600 ${expandedPosts.includes(post?._id) ? '' : 'line-clamp-3'}`} dangerouslySetInnerHTML={{ __html: post?.content }}>
                             {/*{post?.content}*/}
                         </p>
                         {post?.content?.length > 150 && (

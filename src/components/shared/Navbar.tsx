@@ -87,7 +87,7 @@ const Navbar = () => {
     return (
         <motion.nav
             ref={navRef}
-            className="bg-gradient-to-b from-primary to-secondary/60 text-white shadow-lg"
+            className="bg-gradient-to-b from-primary to-secondary/60 text-white shadow-lg sticky top-0 z-50 self-start backdrop-blur-md"
             initial={{ opacity: 0,y: -50 }}
             animate={{ opacity: 1,y: 0 }}
             transition={{ duration: 0.5 }}

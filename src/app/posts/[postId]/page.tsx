@@ -226,7 +226,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                             </Badge>
                                         ))}
                                     </div>
-                                    <div className="prose prose-sm sm:prose max-w-none mb-6" dangerouslySetInnerHTML={{ __html: post.content }}></div>
+                                    <div className="reactQuillRichText max-w-none mb-6" dangerouslySetInnerHTML={{ __html: post.content }}></div>
                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs sm:text-sm text-gray-500 mb-6">
                                         <span className="flex items-center mb-2 sm:mb-0"><Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1" /> Created: {format(new Date(post.createdAt),'PPP')}</span>
                                         <span className="flex items-center"><RefreshCw className="w-3 h-3 sm:w-4 sm:h-4 mr-1" /> Updated: {format(new Date(post.updatedAt),'PPP')}</span>
