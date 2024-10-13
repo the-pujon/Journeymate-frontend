@@ -16,6 +16,8 @@ import { Card,CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { toast } from 'sonner';
 import { Comment } from '@/components/shared/Comment';
+import { Popover,PopoverContent,PopoverTrigger } from "@/components/ui/popover";
+import { Facebook,Twitter,Linkedin,Link } from "lucide-react";
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -94,6 +96,16 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
         }
     };
 
+    const handleShare = async () => {
+        const postUrl = `${window.location.origin}/posts/${params.postId}`;
+        try {
+            await navigator.clipboard.writeText(postUrl);
+            toast.success("Link copied to clipboard!");
+        } catch (err) {
+            toast.error("Failed to copy link");
+        }
+    };
+
     return (
         <div className="bg-gray-50 min-h-screen">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -168,10 +180,21 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                                 <span>{post.totalComments}</span>
                                             </Button>
                                         </div>
-                                        <Button variant="outline" className="flex items-center space-x-2">
-                                            <Share2 className="w-4 h-4" />
-                                            <span>Share</span>
-                                        </Button>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button variant="outline" className="flex items-center space-x-2">
+                                                    <Share2 className="w-4 h-4" />
+                                                    <span>Share</span>
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-2">
+                                                <div className="flex space-x-2">
+                                                    <Button variant="outline" size="icon" onClick={() => handleShare()}>
+                                                        <Link className="w-4 h-4" />
+                                                    </Button>
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
                                 </div>
                             </CardContent>
