@@ -6,14 +6,31 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from 'date-fns';
 import { toast } from 'sonner';
-import { ThumbsUp,ThumbsDown,Reply,Edit,Trash2 } from "lucide-react";
+import { ThumbsUp,ThumbsDown,Reply,Edit,Trash2,Loader2 } from "lucide-react";
 import { motion,AnimatePresence } from 'framer-motion';
 
-export const Comment = ({ comment,onReply,onEdit,onDelete,onVote,depth = 0,currentUserId }) => {
+export const Comment = ({
+    comment,
+    onReply,
+    onEdit,
+    onDelete,
+    onVote,
+    depth = 0,
+    currentUserId,
+    isEditingComment,
+    isDeletingComment,
+    isVotingComment
+}) => {
     const [isEditing,setIsEditing] = useState(false);
     const [editedContent,setEditedContent] = useState(comment.content);
 
+    console.log(comment)
+
     const handleVote = async (voteType) => {
+        if (comment.userVote === voteType) {
+            toast.error("You've already voted on this comment");
+            return;
+        }
         try {
             await onVote(comment._id,voteType);
             toast.success(`${voteType === 'up' ? 'Upvoted' : 'Downvoted'} comment`);
@@ -88,11 +105,31 @@ export const Comment = ({ comment,onReply,onEdit,onDelete,onVote,depth = 0,curre
                         )}
                     </AnimatePresence>
                     <div className="flex flex-wrap items-center gap-0 sm:gap-4 text-xs sm:text-sm">
-                        <Button variant="ghost" size="sm" onClick={() => handleVote('up')}>
-                            <ThumbsUp className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${comment.userVote === 'up' ? 'text-green-500' : ''}`} /> {comment.upVotes}
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleVote('up')}
+                            disabled={isVotingComment || comment.userVote === 'up'}
+                        >
+                            {/*{isVotingComment ? <Loader2 className="animate-spin" /> : (*/}
+                            <>
+                                <ThumbsUp className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${comment.userVote === 'up' ? 'text-green-500' : ''}`} />
+                                {comment.upVotes}
+                            </>
+                            {/*)}*/}
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={() => handleVote('down')}>
-                            <ThumbsDown className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${comment.userVote === 'down' ? 'text-red-500' : ''}`} /> {comment.downVotes}
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleVote('down')}
+                            disabled={isVotingComment || comment.userVote === 'down'}
+                        >
+                            {/*{isVotingComment ? <Loader2 className="animate-spin" /> : (*/}
+                            <>
+                                <ThumbsDown className={`w-3 h-3 sm:w-4 sm:h-4 mr-1 ${comment.userVote === 'down' ? 'text-red-500' : ''}`} />
+                                {comment.downVotes}
+                            </>
+                            {/*)}*/}
                         </Button>
                         {depth === 0 && (
                             <Button variant="ghost" size="sm" onClick={() => onReply(comment._id)}>
@@ -103,23 +140,43 @@ export const Comment = ({ comment,onReply,onEdit,onDelete,onVote,depth = 0,curre
                             <>
                                 {isEditing ? (
                                     <>
-                                        <Button variant="ghost" size="sm" onClick={() => {
-                                            onEdit(comment._id,editedContent);
-                                            setIsEditing(false);
-                                        }}>
-                                            Save
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => {
+                                                onEdit(comment._id,editedContent);
+                                                setIsEditing(false);
+                                            }}
+                                            disabled={isEditingComment}
+                                        >
+                                            {isEditingComment ? <Loader2 className="animate-spin" /> : 'Save'}
                                         </Button>
-                                        <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => setIsEditing(false)}
+                                            disabled={isEditingComment}
+                                        >
                                             Cancel
                                         </Button>
                                     </>
                                 ) : (
-                                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setIsEditing(true)}
+                                        disabled={isEditingComment}
+                                    >
                                         <Edit className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                                     </Button>
                                 )}
-                                <Button variant="ghost" size="sm" onClick={() => onDelete(comment._id)}>
-                                    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => onDelete(comment._id)}
+                                    disabled={isDeletingComment}
+                                >
+                                    {isDeletingComment ? <Loader2 className="animate-spin" /> : <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />}
                                 </Button>
                             </>
                         )}
@@ -137,6 +194,9 @@ export const Comment = ({ comment,onReply,onEdit,onDelete,onVote,depth = 0,curre
                         onVote={onVote}
                         depth={depth + 1}
                         currentUserId={currentUserId}
+                        isEditingComment={isEditingComment}
+                        isDeletingComment={isDeletingComment}
+                        isVotingComment={isVotingComment}
                     />
                 ))}
             </AnimatePresence>

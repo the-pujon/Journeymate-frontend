@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp,ThumbsDown,MessageSquare,Calendar,RefreshCw,Share2,BookOpen,Users,Crown,Bookmark,Tag,Link2 } from "lucide-react";
+import { ThumbsUp,ThumbsDown,MessageSquare,Calendar,RefreshCw,Share2,BookOpen,Users,Crown,Bookmark,Tag,Link2,Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card,CardContent } from "@/components/ui/card";
@@ -32,14 +32,14 @@ import { motion } from 'framer-motion';
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
     const { data: commentsData,isLoading: areCommentsLoading } = useGetCommentsByPostIdQuery(params.postId);
-    const [createComment] = useCreateCommentMutation();
-    const [editComment] = useEditCommentMutation();
-    const [deleteComment] = useDeleteCommentMutation();
-    const [voteComment] = useVoteCommentMutation();
+    const [createComment,{ isLoading: isCreatingComment }] = useCreateCommentMutation();
+    const [editComment,{ isLoading: isEditingComment }] = useEditCommentMutation();
+    const [deleteComment,{ isLoading: isDeletingComment }] = useDeleteCommentMutation();
+    const [voteComment,{ isLoading: isVotingComment }] = useVoteCommentMutation();
     const [newComment,setNewComment] = useState('');
     const [replyingTo,setReplyingTo] = useState(null);
-    const [upvotePost] = useUpvotePostMutation();
-    const [downvotePost] = useDownvotePostMutation();
+    const [upvotePost,{ isLoading: isUpvotingPost }] = useUpvotePostMutation();
+    const [downvotePost,{ isLoading: isDownvotingPost }] = useDownvotePostMutation();
 
 
     const currentUser = useAppSelector(selectCurrentUser);
@@ -288,8 +288,12 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                         className="mb-4"
                                     />
                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                                        <Button onClick={handleCreateComment} className="w-full sm:w-auto bg-primary text-white hover:bg-primary-dark">
-                                            {replyingTo ? "Post Reply" : "Post Comment"}
+                                        <Button
+                                            disabled={isCreatingComment}
+                                            onClick={handleCreateComment}
+                                            className="w-full sm:w-auto bg-primary text-white hover:bg-primary-dark"
+                                        >
+                                            {isCreatingComment ? <Loader2 className="animate-spin " /> : replyingTo ? "Post Reply" : "Post Comment"}
                                         </Button>
                                         {replyingTo && (
                                             <Button variant="outline" onClick={() => setReplyingTo(null)} className="w-full sm:w-auto">
@@ -311,6 +315,9 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                         onDelete={handleDeleteComment}
                                         onVote={handleVoteComment}
                                         currentUserId={currentUserId}
+                                        isEditingComment={isEditingComment}
+                                        isDeletingComment={isDeletingComment}
+                                        isVotingComment={isVotingComment}
                                     />
                                 </motion.div>
                             ))}
