@@ -2,7 +2,7 @@
 'use client'
 
 import React,{ useState } from 'react';
-import { ExternalLink,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,Pencil,Trash2,Loader2 } from 'lucide-react';
+import { ExternalLink,ThumbsUp,ThumbsDown,MessageCircle,Tag,Bookmark,Trash2,Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card";
@@ -58,9 +58,7 @@ const PostCard: React.FC<PostCardProps> = ({
         }
     };
 
-    const handleEditPost = (postId: string) => {
-        console.log(`Editing post ${postId}`);
-    };
+
 
     const handleDeletePost = async (postId: string) => {
         console.log(`Deleting post ${postId}`);
