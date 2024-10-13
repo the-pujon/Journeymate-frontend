@@ -4,20 +4,20 @@ const paymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createPayment: builder.mutation({
       query: (paymentData) => ({
-        url: "/payment/create-payment",
+        url: "/payments/create-payment",
         method: "POST",
         body: paymentData,
       }),
     }),
     getPayments: builder.query({
       query: () => ({
-        url: "/payment",
+        url: "/payments",
         method: "GET",
       }),
     }),
     deletePayment: builder.mutation({
       query: (id) => ({
-        url: `/payment/${id}`,
+        url: `/payments/${id}`,
         method: "DELETE",
       }),
     }),
