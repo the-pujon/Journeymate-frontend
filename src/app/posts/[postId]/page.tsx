@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import React,{ useState } from 'react';
@@ -37,7 +39,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const [editComment,{ isLoading: isEditingComment }] = useEditCommentMutation();
     const [deleteComment,{ isLoading: isDeletingComment }] = useDeleteCommentMutation();
     const [newComment,setNewComment] = useState('');
-    const [replyingTo,setReplyingTo] = useState(null);
+    const [replyingTo,setReplyingTo] = useState<string | null>(null);
     const [upvotePost,{ isLoading: isUpvotingPost }] = useUpvotePostMutation();
     const [downvotePost,{ isLoading: isDownvotingPost }] = useDownvotePostMutation();
 
@@ -68,7 +70,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
         }
     };
 
-    const handleEditComment = async (commentId,content) => {
+    const handleEditComment = async (commentId: string,content: string) => {
         try {
             await editComment({ commentId,data: { content } }).unwrap();
             toast.success("Comment updated successfully");
@@ -77,7 +79,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
         }
     };
 
-    const handleDeleteComment = async (commentId) => {
+    const handleDeleteComment = async (commentId: string) => {
         try {
             await deleteComment({ commentId }).unwrap();
             toast.success("Comment deleted successfully");
@@ -161,7 +163,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                             ]}
                                         >
                                             <CarouselContent>
-                                                {post.image.map((img,index) => (
+                                                {post.image.map((img: string,index: number) => (
                                                     <CarouselItem key={index}>
                                                         <div className="relative h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px]">
                                                             <Image
@@ -195,7 +197,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                 {post.image && post.image.length > 1 && (
                                     <div className="p-4 overflow-x-auto">
                                         <div className="flex space-x-2">
-                                            {post.image.map((img,index) => (
+                                            {post.image.map((img: string,index: number) => (
                                                 <div
                                                     key={index}
                                                     className="relative w-20 h-20 flex-shrink-0 cursor-pointer"
@@ -214,7 +216,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                 <div className="p-4 sm:p-6 md:p-8">
                                     <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
                                         <Badge variant="outline" className="px-2 py-1 text-xs"><Bookmark className="h-3 w-3 mr-1" />{post.category}</Badge>
-                                        {post.tags?.map((tag,index) => (
+                                        {post.tags?.map((tag: string,index: number) => (
                                             <Badge key={index} variant="secondary" className="px-2 py-1 text-xs">
                                                 <Tag className="h-3 w-3 mr-1" />
                                                 {tag}
@@ -312,11 +314,11 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                         </motion.div>
 
                         <motion.div className="space-y-4 sm:space-y-6" variants={containerVariants}>
-                            {comments.map((comment) => (
+                            {comments.map((comment: any) => (
                                 <motion.div key={comment._id} variants={itemVariants}>
                                     <Comment
                                         comment={comment}
-                                        onReply={(commentId) => setReplyingTo(commentId)}
+                                        onReply={(commentId: string) => setReplyingTo(commentId)}
                                         onEdit={handleEditComment}
                                         onDelete={handleDeleteComment}
                                         currentUserId={currentUserId}
