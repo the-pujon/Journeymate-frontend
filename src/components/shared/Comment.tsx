@@ -14,9 +14,8 @@ interface CommentProps {
     onReply: (commentId: string) => void;
     onEdit: (commentId: string,content: string) => void;
     onDelete: (commentId: string) => void;
-    onVote: (commentId: string,voteType: 'up' | 'down') => void;
     depth?: number;
-    currentUserId: string;
+    currentUserId: string | undefined;
     isEditingComment: boolean;
     isDeletingComment: boolean;
 }
@@ -26,7 +25,6 @@ export const Comment: React.FC<CommentProps> = ({
     onReply,
     onEdit,
     onDelete,
-    onVote,
     depth = 0,
     currentUserId,
     isEditingComment,
@@ -162,7 +160,6 @@ export const Comment: React.FC<CommentProps> = ({
                         onReply={onReply}
                         onEdit={onEdit}
                         onDelete={onDelete}
-                        onVote={onVote}
                         depth={depth + 1}
                         currentUserId={currentUserId}
                         isEditingComment={isEditingComment}

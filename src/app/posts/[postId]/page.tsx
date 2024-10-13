@@ -28,6 +28,7 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 import Loading from '@/components/shared/Loading';
 import { motion } from 'framer-motion';
+import { useGetVoteQuery } from '@/redux/features/vote/voteApi';
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -35,12 +36,12 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const [createComment,{ isLoading: isCreatingComment }] = useCreateCommentMutation();
     const [editComment,{ isLoading: isEditingComment }] = useEditCommentMutation();
     const [deleteComment,{ isLoading: isDeletingComment }] = useDeleteCommentMutation();
-    const [voteComment,{ isLoading: isVotingComment }] = useVoteCommentMutation();
     const [newComment,setNewComment] = useState('');
     const [replyingTo,setReplyingTo] = useState(null);
     const [upvotePost,{ isLoading: isUpvotingPost }] = useUpvotePostMutation();
     const [downvotePost,{ isLoading: isDownvotingPost }] = useDownvotePostMutation();
 
+    const { data: voteData,isLoading: isVotingPost } = useGetVoteQuery(params.postId);
 
     const currentUser = useAppSelector(selectCurrentUser);
     const currentUserId = currentUser?._id;
@@ -85,13 +86,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
         }
     };
 
-    const handleVoteComment = async (commentId,voteType) => {
-        try {
-            await voteComment({ commentId,voteType }).unwrap();
-        } catch (error) {
-            toast.error("Failed to vote comment");
-        }
-    };
+
 
     const handleVote = async (voteType: 'up' | 'down') => {
         try {
@@ -239,18 +234,29 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                                 className="flex items-center space-x-1"
                                                 onClick={() => handleVote('up')}
                                                 size="sm"
+                                                disabled={voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'upvote'}
+
                                             >
-                                                <ThumbsUp className={`w-3 h-3 sm:w-4 sm:h-4 ${post.userVote === 'up' ? 'text-green-500' : ''}`} />
-                                                <span className="text-xs sm:text-sm">{post.upVotes}</span>
+                                                {
+                                                    isUpvotingPost ? <Loader2 className="animate-spin" /> : <>
+                                                        <ThumbsUp className={`w-3 h-3 sm:w-4 sm:h-4 ${voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'upvote' ? 'text-green-500' : ''}`} />
+                                                        <span className="text-xs sm:text-sm">{post.upVotes}</span>
+                                                    </>
+                                                }
                                             </Button>
                                             <Button
                                                 variant="outline"
                                                 className="flex items-center space-x-1"
                                                 onClick={() => handleVote('down')}
                                                 size="sm"
+                                                disabled={voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'downvote'}
                                             >
-                                                <ThumbsDown className={`w-3 h-3 sm:w-4 sm:h-4 ${post.userVote === 'down' ? 'text-red-500' : ''}`} />
-                                                <span className="text-xs sm:text-sm">{post.downVotes}</span>
+                                                {
+                                                    isDownvotingPost ? <Loader2 className="animate-spin" /> : <>
+                                                        <ThumbsDown className={`w-3 h-3 sm:w-4 sm:h-4  ${voteData?.success && voteData?.data?.user === currentUserId && voteData?.data?.voteType === 'downvote' ? 'text-red-500' : ''}`} />
+                                                        <span className="text-xs sm:text-sm">{post.downVotes}</span>
+                                                    </>
+                                                }
                                             </Button>
                                             <Button variant="outline" className="flex items-center space-x-1" size="sm">
                                                 <MessageSquare className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -313,11 +319,9 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                         onReply={(commentId) => setReplyingTo(commentId)}
                                         onEdit={handleEditComment}
                                         onDelete={handleDeleteComment}
-                                        onVote={handleVoteComment}
                                         currentUserId={currentUserId}
                                         isEditingComment={isEditingComment}
                                         isDeletingComment={isDeletingComment}
-                                        isVotingComment={isVotingComment}
                                     />
                                 </motion.div>
                             ))}
