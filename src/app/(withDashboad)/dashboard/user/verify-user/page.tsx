@@ -4,11 +4,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useAppSelector } from '@/redux/hook';
 import { selectCurrentUser } from '@/redux/features/auth/authSlice';
-import { useGetUserByIdQuery,useRequestVerificationMutation } from '@/redux/features/user/userApi';
+import { useGetUserByIdQuery } from '@/redux/features/user/userApi';
 import { Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle,X,Shield,Award,Star,ThumbsUp } from 'lucide-react';
-import { toast } from 'sonner';
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -25,7 +24,6 @@ const VerifyUser = () => {
     const currentUser = useAppSelector(selectCurrentUser);
     const userId = currentUser?._id;
     const { data: userProfile,isLoading } = useGetUserByIdQuery(userId);
-    const [requestVerification] = useRequestVerificationMutation();
 
     const containerVariants = {
         hidden: { opacity: 0,y: 50 },
@@ -53,78 +51,11 @@ const VerifyUser = () => {
         },
     };
 
-    //const handleVerificationRequest = async () => {
-    //    if (userProfile?.data.totalUpvotes === 0) {
-    //        return; // The AlertDialog will handle this case
-    //    }
-
-    //    try {
-    //        const url = "https://sandbox.aamarpay.com/jsonpost.php";
-
-    //        const payload = {
-    //            store_id: "aamarpaytest",
-    //            tran_id: "123123173", // You might want to generate a unique transaction ID
-    //            success_url: "http://localhost:3333/api/payment/success",
-    //            fail_url: "http://localhost:3333/api/payment/fail",
-    //            cancel_url: "http://localhost:3333/api/payment/cancel",
-    //            amount: "10.0", // Adjust the amount as needed
-    //            currency: "BDT",
-    //            signature_key: "dbb74894e82415a2f7ff0ec3a97e4183",
-    //            desc: "User Verification Payment",
-    //            cus_name: userProfile?.data.name || "User",
-    //            cus_email: userProfile?.data.email || "user@example.com",
-    //            cus_add1: "Address Line 1",
-    //            cus_add2: "Address Line 2",
-    //            cus_city: "City",
-    //            cus_state: "State",
-    //            cus_postcode: "1234",
-    //            cus_country: "Country",
-    //            cus_phone: userProfile?.data.phone || "+1234567890",
-    //            type: "json"
-    //        };
-
-    //        const response = await fetch(url,{
-    //            method: 'POST',
-    //            headers: {
-    //                'Content-Type': 'application/json',
-    //            },
-    //            body: JSON.stringify(payload),
-    //        });
-
-    //        if (!response.ok) {
-    //            throw new Error(`HTTP error! status: ${response.status}`);
-    //        }
-
-    //        const data = await response.json();
-    //        console.log(data);
-
-    //        // Handle the response from aamarpay
-    //        if (data.result === "true") {
-    //            // Payment initiation successful
-    //            window.location.href = data.payment_url;
-    //        } else {
-    //            // Payment initiation failed
-    //            toast.error('Failed to initiate payment: ' + data.error);
-    //        }
-
-    //        // If payment is successful, proceed with verification request
-    //        //await requestVerification({ userId }).unwrap();
-    //        toast.success('Verification request submitted successfully');
-    //    } catch (error) {
-    //        toast.error('Failed to submit verification request');
-    //        console.error(error);
-    //    }
-    //};
-
-    console.log(`${process.env.NEXT_PUBLIC_SERVER_URL as string}/payment/success`);
 
 
-    const handleVerificationRequest = async (formData) => {
+    const handleVerificationRequest = async () => {
 
         try {
-            // Save form data to local storage
-
-            localStorage.setItem('expectingRedirect','true');
 
             const payload = new URLSearchParams({
                 store_id: 'aamarpaytest',

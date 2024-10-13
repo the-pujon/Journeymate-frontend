@@ -39,7 +39,7 @@ const FailPayment = () => {
             <h1 className="text-3xl font-bold text-red-600 mb-4">Payment Failed</h1>
             {transactionId ? (
                 <div>
-                    <p className="text-lg mb-2">We're sorry, but your payment could not be processed.</p>
+                    <p className="text-lg mb-2">We&apos;re sorry, but your payment could not be processed.</p>
                     <p className="text-md mb-4">
                         Transaction ID: <span className="font-semibold">{transactionId}</span>
                     </p>
