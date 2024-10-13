@@ -1,31 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React from 'react';
 import { Table,TableBody,TableCell,TableHead,TableHeader,TableRow } from "@/components/ui/table"; // Table components from shadcn
 import { motion } from 'framer-motion';
+import { useGetPaymentsQuery } from '@/redux/features/payment/paymentApi';
+import Loading from '@/components/shared/Loading';
 
 const PaymentManagement = () => {
-    // Example payment data
-    const payments = [
-        {
-            user: "64b9c9c0f1234f0123456789",
-            amount: 500,
-            status: "success",
-            transactionId: "TXN123456789",
-        },
-        {
-            user: "64b9c9c0f9876a0987654321",
-            amount: 250,
-            status: "pending",
-            transactionId: "TXN987654321",
-        },
-        {
-            user: "64b9c9c0a9876f7654321234",
-            amount: 750,
-            status: "failed",
-            transactionId: "TXN2468101214",
-        },
-    ];
+
+    const { data: payments,isLoading } = useGetPaymentsQuery(undefined);
+
+    console.log(payments);
+
+    if (isLoading) return <Loading />;
 
     return (
         <motion.div
@@ -39,15 +27,19 @@ const PaymentManagement = () => {
                     <TableHeader>
                         <TableRow>
                             <TableHead>User ID</TableHead>
+                            <TableHead>User Name</TableHead>
+                            <TableHead>User Email</TableHead>
                             <TableHead>Amount</TableHead>
                             <TableHead>Status</TableHead>
                             <TableHead>Transaction ID</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {payments.map((payment,index) => (
+                        {payments?.data?.map((payment: any,index: number) => (
                             <TableRow key={index}>
-                                <TableCell>{payment.user}</TableCell>
+                                <TableCell>{payment?.user?._id}</TableCell>
+                                <TableCell>{payment?.user?.name}</TableCell>
+                                <TableCell>{payment?.user?.email}</TableCell>
                                 <TableCell>${payment.amount.toFixed(2)}</TableCell>
                                 <TableCell>
                                     <span
