@@ -11,6 +11,7 @@ const commentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (result, error, { postId }) => [
         { type: "Comments", id: postId },
+        { type: "Posts", id: postId },
       ],
     }),
 
@@ -22,6 +23,7 @@ const commentApi = baseApi.injectEndpoints({
       }),
       providesTags: (result, error, postId) => [
         { type: "Comments", id: postId },
+        { type: "Posts", id: postId },
       ],
     }),
 
@@ -35,6 +37,7 @@ const commentApi = baseApi.injectEndpoints({
       invalidatesTags: (result, error, { commentId, postId }) => [
         { type: "Comment", id: commentId },
         { type: "Comments", id: postId },
+        { type: "Posts", id: postId },
       ],
     }),
 
@@ -47,6 +50,7 @@ const commentApi = baseApi.injectEndpoints({
       invalidatesTags: (result, error, { commentId, postId }) => [
         { type: "Comment", id: commentId },
         { type: "Comments", id: postId },
+        { type: "Posts", id: postId },
       ],
     }),
 
@@ -60,6 +64,7 @@ const commentApi = baseApi.injectEndpoints({
       invalidatesTags: (result, error, { commentId, postId }) => [
         { type: "Comment", id: commentId },
         { type: "Comments", id: postId },
+        { type: "Posts", id: postId },
       ],
     }),
   }),

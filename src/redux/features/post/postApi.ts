@@ -43,7 +43,11 @@ const postApi = baseApi.injectEndpoints({
         url: `/posts/${id}`,
         method: "GET",
       }),
-      providesTags: (result, error, id) => [{ type: "Posts", id }],
+      providesTags: (result, error, id) => [
+        { type: "Posts", id },
+        { type: "Post", id },
+        "Comments",
+      ],
     }),
 
     // Update post

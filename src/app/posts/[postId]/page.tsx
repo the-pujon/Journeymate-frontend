@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { format } from 'date-fns';
 import { Avatar,AvatarFallback,AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp,ThumbsDown,MessageSquare,Calendar,RefreshCw,Share2,BookOpen,Users } from "lucide-react";
+import { ThumbsUp,ThumbsDown,MessageSquare,Calendar,RefreshCw,Share2,BookOpen,Users,Crown,Bookmark,Tag,Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card,CardContent } from "@/components/ui/card";
@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from 'sonner';
 import { Comment } from '@/components/shared/Comment';
 import { Popover,PopoverContent,PopoverTrigger } from "@/components/ui/popover";
-import { Facebook,Twitter,Linkedin,Link } from "lucide-react";
+import Link from 'next/link';
 
 const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const { data: postData,isLoading: isPostLoading } = useGetPostByIdQuery(params.postId);
@@ -30,6 +30,8 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     const [replyingTo,setReplyingTo] = useState(null);
     const [upvotePost] = useUpvotePostMutation();
     const [downvotePost] = useDownvotePostMutation();
+
+    console.log(postData);
 
     const currentUser = useAppSelector(selectCurrentUser);
     const currentUserId = currentUser?._id;
@@ -107,7 +109,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
     };
 
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className=" min-h-screen">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div className="lg:col-span-2">
@@ -115,12 +117,11 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                             <CardContent className="p-0">
                                 {post.image && post.image.length > 0 && (
                                     <div className="relative">
-                                        <Badge
-                                            variant={post.premium ? "default" : "secondary"}
-                                            className="absolute top-4 left-4 z-10 text-sm px-3 py-1"
-                                        >
-                                            {post.premium ? "Premium" : "Free"}
-                                        </Badge>
+                                        {post.premium && (
+                                            <div className="absolute top-0 left-0 bg-gradient-to-l from-secondary to-primary text-white px-3 py-1 text-xs rounded-br-md shadow-md z-10">
+                                                <Crown className="h-3 w-3 inline-block mr-1" /> Premium
+                                            </div>
+                                        )}
                                         <Image
                                             src={post.image[0]}
                                             alt={post.title}
@@ -146,9 +147,12 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                 )}
                                 <div className="p-8">
                                     <div className="flex flex-wrap gap-2 mb-6">
-                                        <Badge variant="outline" className="px-3 py-1 text-sm">{post.category}</Badge>
+                                        <Badge variant="outline" className="px-3 py-1 text-xs"><Bookmark className="h-3 w-3 mr-1" />{post.category}</Badge>
                                         {post.tags?.map((tag,index) => (
-                                            <Badge key={index} variant="secondary" className="px-3 py-1 text-sm">{tag}</Badge>
+                                            <Badge key={index} variant="secondary" className="px-3 py-1 text-xs">
+                                                <Tag className="h-3 w-3 mr-1" />
+                                                {tag}
+                                            </Badge>
                                         ))}
                                     </div>
                                     <div className="prose max-w-none mb-6">{post.content}</div>
@@ -190,7 +194,7 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                                             <PopoverContent className="w-auto p-2">
                                                 <div className="flex space-x-2">
                                                     <Button variant="outline" size="icon" onClick={() => handleShare()}>
-                                                        <Link className="w-4 h-4" />
+                                                        <Link2 className="w-4 h-4" />
                                                     </Button>
                                                 </div>
                                             </PopoverContent>
@@ -241,14 +245,22 @@ const PostDetailsPage = ({ params }: { params: { postId: string } }) => {
                         <div className="sticky top-4 space-y-6">
                             <Card className="shadow-lg rounded-xl overflow-hidden">
                                 <CardContent className="p-0">
-                                    <div className="relative h-32 bg-gradient-to-r from-primary to-primary-dark"></div>
+                                    <div className="relative h-32 bg-gradient-to-r from-primary to-primary-dark">
+                                        <Image
+                                            src={post.image[0]}
+                                            alt={post.title}
+                                            fill
+                                            className="w-full object-cover rounded-t-xl"
+                                        />
+                                    </div>
                                     <div className="p-6 -mt-16">
                                         <Avatar className="h-24 w-24 border-4 border-white mb-4">
                                             <AvatarImage src={post.author.profilePicture || ''} alt={post.author.user.name} />
                                             <AvatarFallback>{post.author.user.name.charAt(0)}</AvatarFallback>
                                         </Avatar>
-                                        <h2 className="text-2xl font-semibold mb-2">{post.author.user.name}</h2>
-                                        <p className="text-sm text-gray-500 mb-4">{post.author.user.email}</p>
+                                        <Link href={`/profile/${post.author.user._id}`}>
+                                            <h2 className="text-2xl font-semibold mb-2">{post.author.user.name}</h2>
+                                        </Link>
                                         <p className="text-sm mb-4">{post.author.bio}</p>
                                         <div className="flex justify-between text-sm text-gray-500 mb-4">
                                             <span className="flex items-center"><Users className="w-4 h-4 mr-1" /> {post.author.followers.length} followers</span>
