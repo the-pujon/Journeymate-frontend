@@ -10,6 +10,10 @@ import { X,Upload,Image as ImageIcon,Tag,Globe } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { cn } from "@/lib/utils";
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill'),{ ssr: false });
+import 'react-quill/dist/quill.snow.css';
 
 //const IMGBB_API_KEY = 'YOUR_IMGBB_API_KEY'; // Replace with your actual ImgBB API key
 
@@ -92,7 +96,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[600px] h-screen md:h-full p-0 overflow-y-auto to-primary ">
+            <DialogContent className="sm:max-w-[600px] md:h-full p-0 overflow-y-auto to-primary ">
                 <DialogHeader className="p-6 bg-primary/80 text-white">
                     <DialogTitle className="text-2xl font-bold flex items-center">
                         <Globe className="mr-2" />
@@ -132,12 +136,12 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                                 rules={{ required: 'Content is required' }}
                                 render={({ field,fieldState: { error } }) => (
                                     <div>
-                                        <Textarea
-                                            id="content"
-                                            placeholder="Describe your journey..."
-                                            {...field}
+                                        <ReactQuill
+                                            theme="snow"
+                                            value={field.value}
+                                            onChange={field.onChange}
                                             className={cn(
-                                                "mt-1 block w-full rounded-md border-gray-300 shadow-sm min-h-[150px]",
+                                                "mt-1 block w-full rounded-md border-gray-300 shadow-sm",
                                                 error && "border-red-500"
                                             )}
                                         />
