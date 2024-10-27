@@ -27,7 +27,7 @@ interface PreviewImage {
 const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
     const [open,setOpen] = useState(false);
     const [previewImages,setPreviewImages] = useState<PreviewImage[]>(
-        post?.image.map((url: string) => ({ url,isNew: false })) || []
+        post?.image?.map((url: string) => ({ url,isNew: false })) || []
     );
     const [isImageUploading,setIsImageUploading] = useState(false);
     const [updatePost,{ isLoading }] = useUpdatePostMutation();
@@ -64,7 +64,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
             setIsImageUploading(true);
 
             // Compare new images with original images
-            const imageChanged = JSON.stringify(previewImages.map(img => img.url)) !== JSON.stringify(post.image);
+            const imageChanged = JSON.stringify(previewImages?.map(img => img.url)) !== JSON.stringify(post.image);
             let imageUrls = post.image;
             if (imageChanged) {
                 imageUrls = await uploadToImgBB(previewImages);
@@ -121,7 +121,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
     };
 
     const uploadToImgBB = async (images: PreviewImage[]): Promise<string[]> => {
-        const uploadPromises = images.map(async (image) => {
+        const uploadPromises = images?.map(async (image) => {
             if (!image.isNew) return image.url;
 
             const formData = new FormData();
@@ -280,7 +280,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
                                     />
                                 </div>
                                 <div className="flex flex-wrap mt-2 gap-2">
-                                    {tags.map((tag: string,index: number) => (
+                                    {tags?.map((tag: string,index: number) => (
                                         <span key={index} className="bg-primary/20 text-primary text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300 flex items-center">
                                             {tag}
                                             <button type="button" onClick={() => removeTag(tag)} className="ml-1 text-primary hover:text-primary/80">
@@ -312,7 +312,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post }) => {
 
                         {previewImages.length > 0 && (
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
-                                {previewImages.map((img,index) => (
+                                {previewImages?.map((img,index) => (
                                     <div key={index} className="relative group">
                                         <img src={img.url} alt={`Preview ${index}`} className="w-full h-24 object-cover rounded-lg shadow-md" />
                                         <button

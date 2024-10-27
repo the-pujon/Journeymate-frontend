@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useSigninMutation } from '@/redux/features/auth/authApi';
 import { toast } from 'sonner';
-import { Github,Loader2,Mail,Lock } from 'lucide-react';
+import { Github,Loader2,Mail,Lock,User,ShieldCheck } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card,CardContent,CardHeader,CardTitle,CardDescription } from "@/components/ui/card";
@@ -30,7 +30,6 @@ const SignIn: React.FC = () => {
     const [signin,{ isLoading }] = useSigninMutation();
     const router = useRouter();
     const dispatch = useAppDispatch();
-
 
     const { register,handleSubmit,formState: { errors } } = useForm<SignInFormValues>({
         resolver: zodResolver(signInSchema),
@@ -74,14 +73,24 @@ const SignIn: React.FC = () => {
         },
     };
 
+    const userCredentials = {
+        email: "user@gmail.com",
+        password: "12345678"
+    };
+
+    const adminCredentials = {
+        email: "web@programming-hero.com",
+        password: "12345678"
+    };
+
     return (
         <motion.div
-            className="min-h-screen flex items-center justify-center p-4"
+            className="min-h-screen flex items-center justify-center p-4 bg-background"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
         >
-            <Card className="w-full max-w-screen-xl flex flex-col sm:flex-row overflow-hidden">
+            <Card className="w-full max-w-screen-xl flex flex-col sm:flex-row overflow-hidden shadow-lg">
                 <div className="flex-1 hidden sm:block relative h-64 sm:h-auto">
                     <Image
                         src={signinImage}
@@ -91,12 +100,12 @@ const SignIn: React.FC = () => {
                     />
                 </div>
                 <motion.div
-                    className="w-full sm:w-1/2 lg:w-2/5 p-0 sm:p-8"
+                    className="w-full sm:w-1/2 lg:w-2/5 p-6 sm:p-10"
                     variants={itemVariants}
                 >
                     <CardHeader className="text-center">
                         <motion.div className="mb-4" variants={itemVariants}>
-                            <h1 className="text-3xl sm:text-4xl font-extrabold">JourneyMate</h1>
+                            <h1 className="text-3xl sm:text-4xl font-extrabold text-primary">JourneyMate</h1>
                         </motion.div>
                         <motion.div variants={itemVariants}>
                             <CardTitle className="text-xl sm:text-2xl font-semibold">Sign in to your account</CardTitle>
@@ -112,9 +121,32 @@ const SignIn: React.FC = () => {
                     </CardHeader>
                     <CardContent>
                         <motion.div
-                            className="mt-6 sm:mt-8 space-y-4 sm:space-y-6"
+                            className="mt-6 sm:mt-8 space-y-6"
                             variants={itemVariants}
                         >
+                            {/* Credentials Display */}
+                            <div className="bg-muted p-4 rounded-lg">
+                                <h3 className="text-lg font-semibold mb-2 text-center text-foreground">Demo Credentials</h3>
+                                <div className="grid grid-cols-1 gap-4">
+                                    <div className="bg-card p-4 rounded-md">
+                                        <div className="flex items-center mb-2">
+                                            <User className="w-5 h-5 text-primary mr-2" />
+                                            <h4 className="font-medium text-foreground">User</h4>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground"><span className="font-medium">Email:</span> {userCredentials.email}</p>
+                                        <p className="text-sm text-muted-foreground"><span className="font-medium">Password:</span> {userCredentials.password}</p>
+                                    </div>
+                                    <div className="bg-card p-4 rounded-md">
+                                        <div className="flex items-center mb-2">
+                                            <ShieldCheck className="w-5 h-5 text-primary mr-2" />
+                                            <h4 className="font-medium text-foreground">Admin</h4>
+                                        </div>
+                                        <p className="text-sm text-muted-foreground"><span className="font-medium">Email:</span> {adminCredentials.email}</p>
+                                        <p className="text-sm text-muted-foreground"><span className="font-medium">Password:</span> {adminCredentials.password}</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <Button
                                 variant="outline"
                                 className="w-full"
@@ -134,21 +166,21 @@ const SignIn: React.FC = () => {
 
                             <div className="relative">
                                 <div className="absolute inset-0 flex items-center">
-                                    <div className="w-full border-t border-gray-300" />
+                                    <div className="w-full border-t border-muted" />
                                 </div>
                                 <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-background text-gray-500">Or continue with</span>
+                                    <span className="px-2 bg-background text-muted-foreground">Or continue with</span>
                                 </div>
                             </div>
 
-                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
+                            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="email" className="block text-sm font-medium text-foreground">
                                         Email address
                                     </label>
                                     <div className="mt-1 relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Mail className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            <Mail className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                                         </div>
                                         <Input
                                             {...register("email")}
@@ -158,16 +190,16 @@ const SignIn: React.FC = () => {
                                             placeholder="you@example.com"
                                         />
                                     </div>
-                                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+                                    {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
                                 </div>
 
                                 <div>
-                                    <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                                    <label htmlFor="password" className="block text-sm font-medium text-foreground">
                                         Password
                                     </label>
                                     <div className="mt-1 relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            <Lock className="h-5 w-5 text-muted-foreground" aria-hidden="true" />
                                         </div>
                                         <Input
                                             {...register("password")}
@@ -177,27 +209,7 @@ const SignIn: React.FC = () => {
                                             placeholder="••••••••"
                                         />
                                     </div>
-                                    {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
-                                </div>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="remember-me"
-                                            name="remember-me"
-                                            type="checkbox"
-                                            className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                                        />
-                                        <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                            Remember me
-                                        </label>
-                                    </div>
-
-                                    <div className="text-sm">
-                                        <Link href="/auth/request-recovery" className="font-medium text-primary hover:underline">
-                                            Forgot your password?
-                                        </Link>
-                                    </div>
+                                    {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password.message}</p>}
                                 </div>
 
                                 <div>
@@ -206,7 +218,7 @@ const SignIn: React.FC = () => {
                                         disabled={isLoading}
                                         className="w-full"
                                     >
-                                        {isLoading ? <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" /> : <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />}
+                                        {isLoading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <Mail className="w-5 h-5 mr-2" />}
                                         Sign in
                                     </Button>
                                 </div>

@@ -43,7 +43,7 @@ const NewsFeed = () => {
 
   if (error) {
     console.error("Error fetching posts:",error);
-    return <div>Error: {JSON.stringify(error)}</div>;
+    //return <div>Error: {JSON.stringify(error)}</div>;
   }
 
   const posts = postsData?.data?.posts || [];
