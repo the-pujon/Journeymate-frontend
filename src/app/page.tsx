@@ -55,7 +55,7 @@ const NewsFeed = () => {
     <div className="flex flex-col md:flex-row container mx-auto px-4 py-8">
       {/* Left sidebar - Users list */}
       <div className="w-full md:w-2/5 xl:w-1/3 md:pr-4 mb-8 md:mb-0 hidden lg:block">
-        <div className="sticky top-24 max-h-[calc(100vh-6rem)]">
+        <div className="sticky top-24 max-h-[calc(100vh-10rem)]">
           <h2 className="text-2xl font-bold mb-4">People you may know</h2>
           <PeopleYouMayKnow />
         </div>

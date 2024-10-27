@@ -15,6 +15,15 @@ const ReactQuill = dynamic(() => import('react-quill'),{ ssr: false });
 import 'react-quill/dist/quill.snow.css';
 import { toast } from 'sonner';
 
+// Add this interface to define the shape of your form values
+interface FormValues {
+    title: string;
+    content: string;
+    category: string;
+    tags: string[];
+    tagInput: string;
+}
+
 interface CreatePostModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -24,12 +33,12 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
     const [previewImages,setPreviewImages] = useState<string[]>([]);
     const [isImageUploading,setIsImageUploading] = useState(false);
     const [createPost,{ isLoading }] = useCreatePostMutation();
-    const { control,handleSubmit,reset,setValue,watch } = useForm({
+    const { control,handleSubmit,reset,setValue,watch } = useForm<FormValues>({
         defaultValues: {
             title: '',
             content: '',
             category: '',
-            tags: [''],
+            tags: [],
             tagInput: ''
         }
     });
@@ -38,6 +47,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
     const tagInput = watch('tagInput');
 
     const onSubmit = async (data: any) => {
+        setIsImageUploading(true);
         try {
             const imageUrls = await uploadImages(previewImages);
             const postData = { ...data,image: imageUrls,tags: data.tags };
@@ -48,8 +58,12 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
             onClose();
             reset();
             setPreviewImages([]);
+
         } catch (error) {
             console.error('Failed to create post:',error);
+        }
+        finally {
+            setIsImageUploading(false);
         }
     };
 
@@ -84,7 +98,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
     };
 
     const uploadImages = async (images: string[]): Promise<string[]> => {
-        setIsImageUploading(true);
+
         const uploadPromises = images.map(async (image) => {
             const base64Image = image.split(',')[1];
             const formData = new FormData();
@@ -98,7 +112,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
             const data = await response.json();
             return data.data.url;
         });
-        setIsImageUploading(false);
+
 
         return Promise.all(uploadPromises);
     };
@@ -112,8 +126,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                         Create a New Journey
                     </DialogTitle>
                 </DialogHeader>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-6">
-                    <div className="flex flex-col gap-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-10 sm:gap-6 p-6">
+                    <div className="flex flex-col gap-10 sm:gap-6">
                         {/* Title field */}
                         <div>
                             <Label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-300">Title</Label>
@@ -172,7 +186,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen,onClose }) => 
                         </div>
 
                         {/* Category and Tags fields */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 pt-6">
                             <div>
                                 <Label htmlFor="category" className="text-sm font-medium text-gray-700 dark:text-gray-300">Category</Label>
                                 <Controller

@@ -288,13 +288,15 @@ const Navbar = () => {
                                     Contact
                                 </Button>
                             </Link>
-                            <Button variant="ghost" className="justify-start">
-                                <Avatar className="mr-2 h-5 w-5">
-                                    <AvatarImage src={user?.data?.profilePicture} alt={user?.data?.user?.name} />
-                                    <AvatarFallback>{user?.data?.user?.name?.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                Profile
-                            </Button>
+                            <Link href="/dashboard/user/my-profile" passHref>
+                                <Button variant="ghost" className="justify-start">
+                                    <Avatar className="mr-2 h-5 w-5">
+                                        <AvatarImage src={user?.data?.profilePicture} alt={user?.data?.user?.name} />
+                                        <AvatarFallback>{user?.data?.user?.name?.charAt(0)}</AvatarFallback>
+                                    </Avatar>
+                                    Profile
+                                </Button>
+                            </Link>
                         </motion.div>
                     )}
                 </AnimatePresence>

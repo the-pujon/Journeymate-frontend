@@ -30,7 +30,7 @@ const PeopleYouMayKnow = () => {
     if (isLoading) return <Loading />;
 
     return (
-        <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-6rem)]">
+        <div className="space-y-4 overflow-y-auto max-h-[calc(100vh-10rem)]">
             {usersWithoutCurrentUser?.slice(0,5)?.map((user: any) => (
                 <div key={user._id}>
                     <UserCard user={user} isFollowing={user.isFollowing} />

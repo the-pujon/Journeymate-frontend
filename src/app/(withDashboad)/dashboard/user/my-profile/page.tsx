@@ -26,7 +26,7 @@ const MyProfile = () => {
     }
 
     return (
-        <Profile userProfile={userProfile} />
+        <Profile userProfile={userProfile} isMyProfile={true} />
     );
 };
 

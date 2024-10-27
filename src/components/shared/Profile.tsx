@@ -6,7 +6,7 @@ import PostCard from '@/components/shared/PostCard';
 import UserCard from '@/components/shared/UserCard';
 import AboutUser from '@/components/shared/AboutUser';
 
-const Profile = ({ userProfile }: { userProfile: any }) => {
+const Profile = ({ userProfile,isMyProfile }: { userProfile: any,isMyProfile: boolean }) => {
     const cardVariants = {
         hidden: { opacity: 0,y: 20 },
         visible: { opacity: 1,y: 0,transition: { duration: 0.3 } },
@@ -44,7 +44,7 @@ const Profile = ({ userProfile }: { userProfile: any }) => {
                                     //key={post._id}
                                     post={post}
                                     userProfile={userProfile?.data}
-                                    isMyProfile={true}
+                                    isMyProfile={isMyProfile}
                                 />
                             </motion.div>
                         ))}

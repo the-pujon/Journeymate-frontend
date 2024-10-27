@@ -5,20 +5,26 @@ import { useAppSelector } from '@/redux/hook';
 import { selectCurrentUser,useCurrentToken } from '@/redux/features/auth/authSlice';
 import Loading from '@/components/shared/Loading';
 import { toast } from 'sonner';
+import { isTokenExpired } from '@/utils/isTokenExpired';
 export function withAuth<P extends object>(WrappedComponent: React.ComponentType<P>,allowedRoles?: string[]) {
     return function AuthenticatedComponent(props: P) {
         const router = useRouter();
         const currentUser = useAppSelector(selectCurrentUser);
         const token = useAppSelector(useCurrentToken);
+        const isJwtTokenExpired = isTokenExpired(token as string);
+
 
         useEffect(() => {
             if (!token) {
                 router.push('/auth/signin');
             } else if (allowedRoles && currentUser && !allowedRoles.includes(currentUser.role || '')) {
                 toast.error('You are not authorized to access this page');
-                router.push('/auth/signin');
+                router.push("/auth/signin");
             }
-        },[currentUser,token,router]);
+            if (isJwtTokenExpired) {
+                router.push("/auth/signin");
+            }
+        },[currentUser,token,router,isJwtTokenExpired]);
 
         if (!token) {
             return <Loading />;

@@ -19,7 +19,7 @@ const PeopleDetailsPage = ({ params }: { params: { peopleId: string } }) => {
     }
 
     return (
-        <Profile userProfile={userProfile} />
+        <Profile userProfile={userProfile} isMyProfile={false} />
     );
 };
 
